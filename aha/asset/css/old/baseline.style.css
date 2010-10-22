@@ -1,0 +1,152 @@
+#page { 
+margin: 18px auto 36px auto;
+font-family:'ヒラギノ角ゴ Pro W3','Hiragino Kaku Gothic Pro','メイリオ',Meiryo,'ＭＳ Ｐゴシック',sans-serif;
+color: #444;
+}
+
+header {
+margin: 200px 0 200px 0;
+}
+
+header h1 {
+margin: auto;
+width: 150px;
+background: url("../img/webcorelogo_2.gif") no-repeat;
+}
+
+header h1 a {
+display: block;
+text-decoration: none;
+overflow: hidden;
+border: 0;
+margin: 0;
+padding: 0;
+padding-top: 190px;
+height: 0px !important;
+height /**/: 190px;
+width: 150px;
+cursor: pointer;
+}
+
+
+nav {
+margin: 14px 0 0 0 !important;
+}
+
+nav ul {
+margin: auto !important;
+text-align: center;
+}
+
+nav li {
+display: inline;
+font-size: 9pt;
+padding: 0 12px 0 12px;
+list-style: none;
+background: url("../img/link_icon.png") no-repeat 0px 1px;
+}
+
+nav li a {
+text-decoration: none;
+color: #a64;
+}
+
+nav li a:hover {
+text-decoration: underline;
+}
+
+div.listbody {
+margin: 24px 0 18px 0;
+font-size: 10pt;
+}
+
+div.listbody ul {
+margin: 190px 0 0 0;
+padding: 0;
+}
+
+div.listbody li {
+margin: 18px 0;
+padding: 4px 0 4px 28px;
+font-weight: normal;
+font-size: 12pt;
+list-style: none;
+background: url("../img/item_icon.png") no-repeat 0px 2px;
+color: #a64;
+}
+
+div.listbody dt {
+margin: 18px 0;
+padding: 4px 0 4px 28px;
+font-weight: normal;
+font-size: 12pt;
+list-style: none;
+background: url("../img/item_icon.png") no-repeat 0px 2px;
+color: #a64;
+}
+
+div.listbody li a,
+div.listbody dt a {
+text-decoration: none;
+color: #a64;
+}
+
+div.listbody li a:hover,
+div.listbody dt a:hover {
+text-decoration: underline;
+}
+
+div.listbody dl {
+margin: 4px 0 0 0;
+padding: 0;
+}
+
+div.listbody dt {
+margin: 18px 0 9px 0;
+padding: 0 0 0 14px;
+font-weight: normal;
+font-size: 12pt;
+list-style: none;
+background: url("../img/link_icon.png") no-repeat 0px 4px;
+color: #a64;
+}
+
+div.listbody dd {
+margin: 0;
+padding: 0 0 0 14px;
+font-weight: normal;
+font-size: 10pt;
+list-style: none;
+}
+
+article {
+margin: 24px 0 48px 0;
+}
+
+article h2,
+div.listbody h2 {
+font-size: 18pt;
+font-weight: bold;
+padding: 0;
+margin: 0 0 12px 0;
+color: #641;
+}
+
+article p {
+font-size: 10pt;
+padding: 0;
+margin: 0 0 0.5em 0;
+line-height: 2em;
+}
+
+footer {
+margin: 18px 0 0 0;
+clear: both;
+border-top: 1px solid dimgray;
+}
+
+footer p {
+text-align: center;
+font-size: 9pt;
+display:block;
+}

@@ -1,0 +1,154 @@
+
+msgid ""
+msgstr ""
+"Project-Id-Version: coregae 0.7.1\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2010-05-16 19:11+0200\n"
+"PO-Revision-Date: 2010-05-16 04:32+0200\n"
+"Last-Translator: kogakazuo@gmail.com\n"
+"Language-Team: ja <LL@li.org>\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.0dev-r546\n"
+
+msgid "management screen"
+msgstr "管理画面"
+
+msgid "Edit contents"
+msgstr "コンテンツの編集"
+
+msgid "Site setting"
+msgstr "サイトの設定"
+
+msgid "Logout"
+msgstr "ログアウト"
+
+msgid "Add"
+msgstr "追加"
+
+msgid "Edit"
+msgstr "編集"
+
+msgid "Going up"
+msgstr "上へ"
+
+msgid "Show list"
+msgstr "リスト"
+
+msgid "Object list"
+msgstr "オブジェクト一覧"
+
+msgid "Title"
+msgstr "タイトル"
+
+msgid "Modified"
+msgstr "更新日"
+
+msgid "Delete"
+msgstr "削除"
+
+
+# object types
+
+msgid "Are you sure ? Your changes will disappeared."
+msgstr "変更は反映されません。よろしいですか？"
+
+# object types
+
+msgid "File"
+msgstr "ファイル"
+
+msgid "Page"
+msgstr "ページ"
+
+msgid "Image"
+msgstr "画像"
+
+msgid "Folder"
+msgstr "フォルダ"
+
+
+# Object forms
+
+#Page
+
+msgid "Add New Page"
+msgstr "新規ページの追加"
+
+msgid "Edit Page"
+msgstr "ページの編集"
+
+msgid "Add"
+msgstr "追加"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Title"
+msgstr "タイトル"
+
+msgid "Description"
+msgstr "解説"
+
+msgid "Body"
+msgstr "本文"
+
+#Folder
+
+msgid "Object list"
+msgstr "オブジェクト一覧"
+
+msgid "Add New Folder"
+msgstr "新規フォルダの追加"
+
+msgid "Edit Folder"
+msgstr "フォルダの編集"
+
+msgid "Edit Folder"
+msgstr "フォルダの編集"
+
+#File
+
+msgid "Add New File"
+msgstr "新規ファイルの追加"
+
+msgid "Edit File"
+msgstr "ファイルの編集"
+
+#Image
+
+msgid "Add New Image"
+msgstr "新規画像の追加"
+
+msgid "Image File"
+msgstr "画像ファイル"
+
+msgid "Edit Image"
+msgstr "画像の編集"
+
+# Site Data
+
+msgid "Edit Site Data"
+msgstr "Webサイトの設定"
+
+msgid "Site Summary"
+msgstr "概要"
+
+msgid "Tag for Google Analytics"
+msgstr "Google Analyticsのタグ"
+
+msgid "Accounts of Site admin"
+msgstr "サイト管理者のアカウント"
+
+msgid "Separated in each lines in case of multiple account."
+msgstr "Googleアカウントのメールアドレス。複数ある場合は改行で区切る"
+
+
+
+
+

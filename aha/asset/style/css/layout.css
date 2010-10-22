@@ -1,0 +1,257 @@
+/* Basic  ---------------------------------------- */
+
+.clear { clear: both; }
+
+body {
+	background: white;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #646464;
+	text-align: center;
+}
+
+#wrapper {
+	text-align: left;
+	width: 930px;
+	margin: 0 auto;
+}
+
+/* Logo  ---------------------------------------- */
+
+h1 {
+	margin: 15px 0 10px 5px;
+	width: 225px;
+	height: 28px;
+	background: url(../img/transdmin-light.gif) no-repeat left top;
+}
+
+h1 a {
+	display: block;
+	width: 225px;
+	height: 28px;
+}
+
+h1 span { display: none; }
+
+/* Main Navigation ---------------------------------------- */
+
+#mainNav {
+	float: right;
+	height: 1em;
+	padding: 6px;
+	margin: 4px 0 8px 0;
+}
+
+#mainNav li {
+	display: inline;
+	height: 1.2em;
+	font-weight: normal;
+	/*border-right: 1px solid #ddd;*/
+}
+
+#mainNav li a {
+	text-decoration: none;
+	color: #868686;
+	padding: 0 0.8em;
+}
+
+#mainNav li a:hover { color: #333; }
+
+#mainNav li a.active, #mainNav li a.active {
+	color: #111;
+	text-decoration: underline;
+}
+
+/* Container ---------------------------------------- */
+
+#containerHolder {
+	background: #eee;
+	padding: 5px;
+}
+
+
+#container {
+	background: #fff url(../img/content.gif) repeat-y left top;
+	border: 1px solid #ddd;
+	width: 918px;
+}
+
+/* Sidebar ---------------------------------------- */
+
+#sidebar {
+	width: 179px;
+	float: left;
+}
+
+#sidebar .sideNav { width: 179px; }
+
+#sidebar .sideNav li { border-bottom: 1px solid #ddd; width: 179px; }
+
+#sidebar .sideNav li a {
+	display: block;
+	color: #646464;
+	background: #f6f6f6;
+	text-decoration: none;
+	height: 29px;
+	line-height: 29px;
+	padding: 0 19px;
+}
+
+#sidebar .sideNav li a img {
+	vertical-align: text-bottom;
+}
+
+#sidebar .sideNav li a:hover { background: #fdfcf6; }
+
+#sidebar .sideNav li a.active, #sidebar .sideNav li a.active:hover {
+	background: #f0f7fa;
+	color: #c66653;
+}
+
+/* Breadcrumb ---------------------------------------- */
+
+h2 {
+	color: #646464;
+	font-size: 16px;
+	line-height: 16px;
+	font-weight: bold;
+	margin: 20px 0 8px 0px;
+	padding: 0 0 6px 0px;
+	border-bottom: 1px solid #ddd;
+}
+
+h2 a {
+	color: #646464;
+	text-decoration: none;
+}
+
+h2 a.active { color: #c66653; }
+
+h2 a:hover { text-decoration: underline; }
+
+/* Content ---------------------------------------- */
+
+#main {
+	width: 700px !important;
+	float: right;
+	padding: 0 19px 0 0;
+}
+
+h3 {
+	font-size: 14px;
+	line-height: 14px;
+	font-weight: bold;
+	color: #5494af;
+	padding: 0 0 0 10px;
+	margin: 20px 0 10px;
+}
+
+#main table.admin {
+	border-top: 1px solid #ddd;
+	width: 700px;
+}
+
+#main table.admin tr td {
+	background: #f6f6f6;
+	padding: 0px 10px;
+	height: 2.2em;
+	line-height: 2em;
+	border-bottom: 1px solid #ddd;
+	font-size: 10pt;
+}
+
+#main table.admin tr td img {
+	vertical-align: text-bottom;
+}
+
+#main table.admin th {
+	background: #666;
+	padding: 0px 4px;
+	height: 1.6em;
+	line-height: 1.4em;
+	text-align:center;
+	color: white;
+	font-size: 10pt;
+}
+
+#main table.admin th.middlelen {
+	width: 10em;
+}
+
+#main table.admin th.shortlen {
+	width: 4em;
+}
+
+#main table.admin td.center {
+	text-align:center;
+}
+
+#main table.admin td.left {
+	text-align:left;
+}
+
+#main table.admin tr.odd td {
+	background: #fbfbfb;
+}
+
+#main table.admin tr:hover td { background: #fdfcf6; }
+
+#main table.admin .action {
+	text-align: right;
+	padding: 0 20px 0 10px;
+}
+
+#main table.admin tr .action a { margin: 0 0 0 10px; text-decoration: none; color: #9b9b9b; }
+#main table.admin tr:hover .action .edit { color: #c5a059; }
+#main table.admin tr:hover .action .delete { color: #a02b2b; }
+#main table.admin tr:hover .action .view { color: #55a34a; }
+
+#main table.admin tr:hover .action a:hover { text-decoration: underline; }
+
+/* Footer ---------------------------------------- */
+
+#footer {
+	margin: 10px auto 30px auto;
+	font-size: 11px;
+	line-height: 11px;
+	color: #9B9B9B;
+	padding: 0 0 0 5px;
+	text-align: center;
+}
+
+#footer a { color: #9B9B9B; }
+
+#footer a:hover { text-decoration: none; }
+
+
+.pagination {
+padding:3px;
+margin: 4px 0;
+}
+.pagination ul {
+margin: 0;
+padding: 0;
+text-align: center;
+}
+.pagination li {
+list-style-type: none;
+display: inline;
+}
+.pagination a, .pagination a:visited {
+padding: 0 5px;
+border: 1px solid #a8a2e1;
+text-decoration: none;
+color: #2b66a5;
+}
+.pagination a:hover, .pagination a:active {
+border: 1px solid #2b66a5;
+color: #000000;
+background-color: #c4dfff;
+}
+.pagination a.current {
+background-color: #2a66ac;
+color: #ffffff !important;
+border-color: #2b66a5;
+font-weight: bold;
+cursor: default;
+}
