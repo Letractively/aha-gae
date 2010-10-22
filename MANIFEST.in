@@ -1,0 +1,12 @@
+recursive-include aha *.py
+recursive-include aha *.html
+recursive-include aha *.htm
+recursive-include aha *.css
+recursive-include aha *.js
+recursive-include aha *.gif
+recursive-include aha *.jpg
+recursive-include aha *.png
+recursive-include aha *.pot
+recursive-include aha *.po
+recursive-include aha *.mo
+
