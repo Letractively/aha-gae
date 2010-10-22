@@ -93,7 +93,7 @@ class BaseController(object):
         self.helpers = helper.get_helpers()
         try:
             import application.util.helper
-        except AttributeError, e:
+        except ImportError, e:
             pass
 
         # view object
@@ -154,6 +154,7 @@ class BaseController(object):
         
         if html:
             content = (''.join(html)).decode('utf-8')
+            content_path=''
         elif opt:
             content, content_path, content_type = self.parse_opt(**opt)
         context = self.__dict__
@@ -165,7 +166,7 @@ class BaseController(object):
             c = Context(context)
             result = t.render(content_path, context)
         elif content:
-            t = Template(opt.get('template_string').encode('utf-8'))
+            t = Template(content.encode('utf-8'))
             c = Context(context)
             result = t.render(c)
         else:
