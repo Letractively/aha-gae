@@ -26,8 +26,10 @@ import router
 import sys 
 import os
 from traceback import *
-from aha import Config
 
+from google.appengine.api import memcache
+
+from aha import Config
 from aha.controller.util import get_controller_class
 
 def dispatch(hnd):
@@ -74,27 +76,42 @@ def dispatch(hnd):
 
     # get the action from the controller
     actionmethod = getattr(ctrl, route['action'], None)
-    if actionmethod:
-        # if before_action returns True,
-        # terminate the remain action
-        if ctrl.before_action() != False:
-            if ismethod(actionmethod):
-                actionmethod()
-            else:
-                actionmethod(*[ctrl])
-            ctrl.after_action()
 
-        if not ctrl.has_rendered:
-            ctrl.render(template = route['action'],
-                        values = ctrl.__dict__)
-        # setting cookie
-        if ctrl.post_cookie.keys():
-            c = ctrl.post_cookie
-            cs = c.output().replace('Set-Cookie: ', '')
-            ctrl.response.headers.add_header('Set-Cookie', cs)
+    # if the action is none ,
+    #   or it is not decorated by using expose, raise exception
+    #   to avoid unintended method traversal.
+    if not actionmethod or not getattr(actionmethod, '_exposed_', False):
+        if not os.environ.get('SERVER_SOFTWARE', '').startswith('Dev'):
+            try:
+                PAGE_CACHE_EXPIRE = config.page_cache_expire
+            except:
+                PAGE_CACHE_EXPIRE = 60*60
+            p = urlsplit(hnd.request.url)[2]
+            memcache.set(p, 'error', PAGE_CACHE_EXPIRE)
+            logging.debug('%s is cahed as a error page' % p)
+        ctrl.response.set_status(404)
+        m = '%s %s (Method not found)'
+        raise Exception(m % ctrl.response._Response__status)
 
-    else: # invalid action
-        errstr = 'Invalid action `%s` in `%s`' % \
-                                (route['action'], route['controller'])
-        logging.error(errstr)
-        raise Exception(errstr)
+    # if before_action returns False, terminate the remain action
+    if ctrl.before_action() != False:
+        if ismethod(actionmethod):
+            actionmethod()
+        else:
+            actionmethod()
+        ctrl.after_action()
+
+    #check status
+    st = ctrl.response._Response__status[0]
+    if st >= 400:
+        # error occured
+        raise Exception('%s %s' % ctrl.response._Response__status)
+
+    if not ctrl.has_rendered:
+        ctrl.render(template = action, values = ctrl.__dict__)
+
+    # manage cookies
+    if ctrl.post_cookie.keys():
+        c = ctrl.post_cookie
+        cs = c.output().replace('Set-Cookie: ', '')
+        ctrl.response.headers.add_header('Set-Cookie', cs)
