@@ -83,6 +83,8 @@ def run(debug = False, useappstatus = False):
         import inspect
         inspect.getsourcefile = inspect.getfile
 
+        patch_werkzeug()
+
         from werkzeug import DebuggedApplication
         global _debugged_app
         if not _debugged_app:
@@ -111,3 +113,26 @@ def run(debug = False, useappstatus = False):
             app = app = recording.appstats_wsgi_middleware(app)
 
         run_wsgi_app(app)
+
+
+def patch_werkzeug():
+    """
+    A function to patch werkzeug to make it work on app engine
+    """
+    from werkzeug.debug.console import HTMLStringO
+
+    def seek(self, n, mode=0):
+        pass
+    
+    
+    def readline(self):
+        if len(self._buffer) == 0:
+            return ''
+        ret = self._buffer[0]
+        del self._buffer[0]
+        return ret
+    
+    
+    # Apply all other patches.
+    HTMLStringO.seek = seek
+    HTMLStringO.readline = readline
