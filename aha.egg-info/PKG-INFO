@@ -1,11 +1,25 @@
 Metadata-Version: 1.0
 Name: aha
-Version: 0.8adev
-Summary: aha is a weweb application framework specialized for Google App Engine.
+Version: 0.81adev
+Summary: aha is a web application framework specialized for Google App Engine.
 Home-page: http://coreblog.org/aha
 Author: Atsushi Shibata
 Author-email: shibata@webcore.co.jp
 License: BSD
-Description: aha is a web application framework specialized for Google App Engine. It provides the finest way to propagate your 'aha !' into cruld :-).
+Description: 
+        aha
+        ======
+        aha is a web application framework specialized for Google App Engine.
+        It provides the finest way to propagate your 'aha !' into cruld :-).
+        
+        
 Keywords: web appengine framework
-Platform: UNKNOWN
+Platform: any
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
