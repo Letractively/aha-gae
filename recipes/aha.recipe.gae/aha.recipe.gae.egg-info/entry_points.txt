@@ -1,0 +1,3 @@
+[zc.buildout]
+app_lib = aha.recipe.gae.app_lib:Recipe
+

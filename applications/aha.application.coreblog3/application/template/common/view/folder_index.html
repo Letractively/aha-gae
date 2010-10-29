@@ -1,0 +1,26 @@
+## -*- coding: utf-8 -*-
+<%inherit file="./site_base.html"/>
+
+<%def name="main()">
+<div class="listbody">
+
+<h2>${content.title or content.name}</h2>
+%if content.description:
+<p>${content.description}</p>
+%endif
+<dl>
+%for o in content.get_childs():
+	<dt>
+		<a href="${path_obj.get_path()}/${o.name}"> ${o.title or o.name} </a>
+	</dt>
+	%if o.description:
+	<dd>
+		${o.description}
+	</dd>
+	%endif
+%endfor
+</dl>
+
+</div>
+</%def>
+

@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: aha.plugin.twitteroauth
+Version: 0.9bdev
+Summary: A twitter auth plugin for aha
+Home-page: http://coreblog.org/aha
+Author: Atsushi Shibata
+Author-email: shibata@webcore.co.jp
+License: BSD
+Description: A plugin that ssupplies authentication support of twitter oauth.
+Keywords: web aha twitter authentication plugin
+Platform: UNKNOWN

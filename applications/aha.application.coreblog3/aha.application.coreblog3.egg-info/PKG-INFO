@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: aha.application.coreblog3
+Version: 0.6adev
+Summary: A blog application workins on Google App Engine
+Home-page: http://coreblog.org/
+Author: Atsushi Shibata
+Author-email: shibata@webcore.co.jp
+License: BSD
+Description: A blog application works on Google App Engine.
+Keywords: web blog appengine cms
+Platform: UNKNOWN

@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: aha.application.default
+Version: 0.81bdev
+Summary: An default application for aha framework.
+Home-page: http://coreblog.org/aha
+Author: Atsushi Shibata
+Author-email: shibata@webcore.co.jp
+License: BSD
+Description: A default appliction for aha framework. It has only simple controller and say 'aha :-)' .
+Keywords: web aha appengine web
+Platform: UNKNOWN

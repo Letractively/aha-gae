@@ -21,6 +21,7 @@ __licence__ = 'BSD'
 import re
 import logging
 from inspect import ismethod
+from urlparse import urlsplit
 
 import router
 import sys 
@@ -108,7 +109,7 @@ def dispatch(hnd):
         raise Exception('%s %s' % ctrl.response._Response__status)
 
     if not ctrl.has_rendered:
-        ctrl.render(template = action, values = ctrl.__dict__)
+        ctrl.render(template = route['action'], values = ctrl.__dict__)
 
     # manage cookies
     if ctrl.post_cookie.keys():

@@ -1,0 +1,35 @@
+## -*- coding: utf-8 -*-
+<%inherit file="/admin_base.html"/>
+	<%def name="head()">
+	<link rel="stylesheet" type="text/css" href="/css/defaultform.css">
+
+	</%def>
+
+
+<%def name="main()">
+
+<h2>${page_title}</h2>
+
+<table>
+<tbody>
+%for f in objects:
+<tr>
+<td>
+<a href="${edit_base}${f.key()}"> ${getattr(f, link_title)} </a>
+</td>
+</tr>
+%endfor
+
+</tbody>
+</table>
+
+<div align="center" style="width: 100%; font-size: 9pt;">
+%if prev:
+${prev}
+ | 
+%endif
+${next}
+</div>
+
+</%def>
+

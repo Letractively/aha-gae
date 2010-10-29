@@ -1,0 +1,28 @@
+## -*- coding: utf-8 -*-
+<?xml version="1.0" encoding="utf-8"?> 
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	version="2.0">
+	<channel>
+		<title>${content.title}</title>
+		<link>http://coreblog.org${content.get_path()}</link>
+
+		<generator>CoreCMS</generator>
+		<dc:creator>ats</dc:creator>
+% for e in blog.get_entries(0, blog.top_entry_count):
+			<item>
+				<title>${e.title}</title>
+				<link>http://coreblog.org${e.get_path()}</link>
+				<guid isPermaLink="true">http://coreblog.org${e.get_path()}</guid>
+				<description><![CDATA[
+${e.body}
+%if e.extend_body:
+${e.extend_body}
+%endif
+]]></description>
+				<dc:creator>ats</dc:creator>
+				<pubDate>${helpers.format_date(e.created_at, 'rfc822')} +0900</pubDate>
+			</item>
+% endfor
+	</channel>
+</rss>

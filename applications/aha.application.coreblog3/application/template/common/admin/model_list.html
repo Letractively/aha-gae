@@ -1,0 +1,58 @@
+## -*- coding: utf-8 -*-
+<%inherit file="./admin_base.html"/>
+
+<%def name="main()">
+<%
+_=translate
+%>
+<h3>${_(page_title)}</h3>
+
+<table cellpadding="0" cellspacing="0" class="admin">
+<tbody>
+<tr>
+%for cls, item in list_titles:
+<th ${(" class='%s'"%cls)*bool(cls)}>${_(item)}</th>
+%endfor
+</tr>
+%for o in objs:
+<%
+cont=o.get_content()
+%>
+
+<tr>
+<td>
+${helpers.get_icon_from_type(o.ctype)}
+<%link, title=controller.get_listpage_item(cont);%>
+%if link:
+<a href="${link}">
+%endif
+${title}
+%if link:
+</a>
+%endif
+</td>
+<td class="center">${helpers.format_date(o.modified_at, 'short')}</td>
+<td class="center"><a href="${edit_base}/${o.name}/edit"><img src="/style/img/edit_icon.png" /></a></td>
+<td class="center"><img src="/style/img/trash.png" /></td>
+</tr>
+%endfor
+
+</tbody>
+</table>
+
+<div class="pagination">
+<ul>
+%for link, page in helpers.get_pagenation(start, totla_count, page_size):
+	%if link=='current':
+		<li><a class="current">${page}</a></li>
+	%elif link:
+		<li><a href="${path_obj.get_path()}/list${link}">${page}</a></li>
+	%else:
+		<li><a>${page}</a></li>
+	%endif
+%endfor
+</ul>
+</div>
+
+</%def>
+

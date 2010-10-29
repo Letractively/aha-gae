@@ -1,0 +1,10 @@
+## -*- coding: utf-8 -*-
+<%inherit file="blog_base.html"/>
+<%namespace file="entry.html" import="entry_body"/>
+
+<%def name="column_one()">
+% for e in blog.get_entries(0, blog.top_entry_count):
+${entry_body(e)}
+% endfor
+</%def>
+

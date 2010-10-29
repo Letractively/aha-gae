@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: aha.recipe.gae
+Version: 0.7bdev
+Summary: a buildout recipe for web application framework aha
+Home-page: http://coreblog.org/ats
+Author: Atsushi Shibata
+Author-email: shibata@webcore.co.jp
+License: BSD
+Description: a buildout recipe for web application framework aha
+Keywords: buildout recipe appengine
+Platform: UNKNOWN

@@ -1,0 +1,135 @@
+## -*- coding: utf-8 -*-
+<%inherit file="blog_base.html"/>
+
+<%def name="entry_header(entry)">
+	<header>
+		<div class="entrytitle">
+		<h2><a href="${entry.get_path()}">${entry.title}</a></h2>
+		</div>
+		<div class="entryinfo">
+			<div class="inner">
+			<ul>
+			<li>
+			${_('Posted by :')}
+			ats
+			${_('at :')}
+			<time datetime="${helpers.format_date(entry.created_at, 'html5')}" pubdate>
+			${helpers.format_date(entry.created_at, 'long')}
+			</time>
+			</li>
+			<% cats=entry.get_category_objects();
+			%>
+			% if cats:
+			<li>
+			${_('Tag(s)')}:
+			%for c in cats:
+			${c.title}
+			%endfor
+			</li>
+			% endif
+			<li>
+			<a href="http://b.hatena.ne.jp/entry/http://coreblog.org${entry.get_path()}">
+			<img src="/img/addhatebu.gif" width="16" height="12" style="border: none;" />
+			</a>
+			<a href="http://b.hatena.ne.jp/entry/http://coreblog.org${entry.get_path()}">
+			  <img src="http://b.hatena.ne.jp/entry/image/http://coreblog.org${entry.get_path()}">
+			</a>
+			</li>
+			</ul>
+			<ul>
+			% if entry==content:
+			<li>
+			<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="ats">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+			</li>
+			<li>
+			<script type="text/javascript" src="http://reddit.com/static/button/button1.js"></script>
+			</li>
+			<li>
+			<iframe src="http://www.facebook.com/plugins/like.php?${helpers.urlquote('http://coreblog.org'+entry.get_path())}&amp;layout=button_count&amp;show_faces=true&amp;width=450&amp;action=like&amp;colorscheme=light&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:80px; height:21px;" allowTransparency="true"></iframe>
+			</li>
+			% endif
+			</ul>
+			</div>
+		</div>
+	</header>
+</%def>
+
+<%def name="entry_body(entry)">
+<article>
+	${self.entry_header(entry)}
+	
+	<section class="entrybody">
+	${entry.body}
+	%if entry.extend_body:
+	${entry.extend_body}
+	%endif
+	%if False:
+	<nav class="nextprev">
+		<%
+			prev=entry.get_previous()
+			next=entry.get_next()
+		%>
+		<dl>
+			%if prev:
+			<dt>${_('The Previous Entry')}</dt>
+			<dd><a href="${prev.get_path()}">${prev.title}</a></dd>
+			<br />
+			%endif
+			%if next:
+			<dt>${_('The Next Entry')}</dt>
+			<dd><a href="${next.get_path()}">${next.title}</a></dd>
+			%endif
+		</dl>
+	</nav>
+	%endif
+	</section>
+	${self. entry_comments(entry)}
+</article>
+</%def>
+
+<%def name="entry_comments(entry)">
+	%if entry.comment_count:
+		% for n, c in enumerate(entry.get_comments(order='created_at')):
+		% if n==0:
+		<section class="comments">
+		<h2>${_('Comments')}</h2>
+		% endif:
+
+		<div class="comment">
+		% if c.url and 'profile_image' in c.url:
+		<div class="icon">
+			<img src="c.url">
+		</div>
+		% endif
+		<h3>${c.title}</h3>
+		<ul>
+		<li>
+		${_('Posted by :')}
+		${c.author_name}
+		${_('at :')}
+		${helpers.format_date(c.created_at, 'long')}
+		</li>
+		</ul>
+		<p>
+		${c.body}
+		</p>
+		</div>
+
+		% if n==0:
+		</section>
+		% endif:
+
+		% endfor:
+	% endif:
+
+	%if content==entry and entry.accept_comment<=1:
+	<section class="commentform">
+		${get_comment_form().render(translate=translate)|n}
+	</section>
+	%endif
+</%def>
+
+<%def name="column_one()">
+${entry_body(content)}
+</%def>
+

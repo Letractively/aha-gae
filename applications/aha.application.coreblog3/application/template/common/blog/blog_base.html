@@ -1,0 +1,61 @@
+## -*- coding: utf-8 -*-
+<%inherit file="../view/site_base.html"/>
+<%namespace file="blogparts.html" import="*"/>
+/*
+	a template to define blog-wide structure.
+*/
+<%def name="site_title()">
+		<title>
+		%if content!=blog:
+		${content.title} | 
+		%endif
+		${blog.title}
+		</title>
+		<link rel="alternate"
+		      href="http://coreblog.org/ats/RSS2"
+		      title="RSS 2.0" type="application/rss+xml" />
+		<script type="text/javascript" src="http://s.hatena.ne.jp/js/HatenaStar.js"></script>
+		<script type="text/javascript">
+		Hatena.Star.SiteConfig = {
+		  entryNodes: {
+		    'article header': {
+		      uri: 'h2 a',
+		      title: 'h2',
+		      container: 'h2'
+		    }
+		  }
+		};
+		</script>
+</%def>
+
+<%def name="header()">
+<header class="width4">
+	<h1><a href="${blog.get_path()}">${blog.title}</a></h1>
+</header>
+</%def>
+
+<%def name="column_one()">
+column one
+</%def>
+<%def name="column_two(blog)">
+	<aside>
+		<dl>
+			${about(blog)}
+			${recent_entries(blog)}
+			${recent_comments(blog)}
+			${hatenabookmark(blog)}
+			${googleconnection(blog)}
+		</dl>
+	</aside>
+</%def>
+
+<%def name="main()">
+	<section class="width4">
+		<div class="column width3 first">
+			${self.column_one()}
+		</div>
+		<div class="column width1">
+			${self.column_two(blog)}
+		</div>
+	</section>
+</%def>

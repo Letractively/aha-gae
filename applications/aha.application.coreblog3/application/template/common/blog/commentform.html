@@ -1,0 +1,13 @@
+## -*- coding: utf-8 -*-
+<%inherit file="blog_base.html"/>
+<%namespace file="entry.html" import="entry_header"/>
+
+<%def name="column_one()">
+	${entry_header(content)}
+	%if content.accept_comment<=1:
+	<section class="commentform">
+		${form.render(values=form.values, errors=form.errors, translate=translate)|n}
+	</section>
+	%endif
+</%def>
+

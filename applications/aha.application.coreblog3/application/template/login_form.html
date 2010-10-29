@@ -1,0 +1,29 @@
+## -*- coding: utf-8 -*-
+<%inherit file="./admin_base.html"/>
+	<%def name="head()">
+	<link rel="stylesheet" type="text/css" href="/css/defaultform.css">
+
+	</%def>
+
+<%def name="main()">
+
+<h2>Login</h2>
+
+%if error:
+<div class="error">${error}</div>
+%endif
+
+<form action="/admin/login" method="post">
+
+<label for="id">Login ID</label>
+<input type="text" name="id" size="20" value="${request.get('id', '')}">
+<br />
+<label for="id">Password</label>
+<input type="password" name="password" size="20">
+<br />
+<input type="submit" name="Login">
+
+</form>
+
+</%def>
+

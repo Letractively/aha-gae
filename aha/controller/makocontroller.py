@@ -146,9 +146,7 @@ def mako_patch():
             source = codegen.compile(node, template.uri, filename,
                              default_filters = template.default_filters, 
                              buffer_filters = template.buffer_filters, 
-                             imports = template.imports, 
-                             source_encoding = lexer.encoding, 
-                             generate_unicode = not template.disable_unicode)
+                             imports = template.imports)
             if not no_cache:
                 memcache.set(cachekey, source)
                 logging.debug("Store mako template: "+cachekey)

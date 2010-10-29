@@ -1,0 +1,16 @@
+## -*- coding: utf-8 -*-
+<%inherit file="./site_base.html"/>
+
+<%def name="main()">
+<article>
+
+<h2>${content.title or content.name}</h2>
+%if content.description:
+<p>${content.description}</p>
+%endif
+<p>${content.body}</p>
+
+</article>
+
+</%def>
+

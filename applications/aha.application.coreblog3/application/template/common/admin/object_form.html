@@ -1,0 +1,10 @@
+## -*- coding: utf-8 -*-
+<%inherit file="./admin_base.html"/>
+
+<%def name="main()">
+%if form.errors.get('all', None):
+<div class="errors">${form.errors['all']}</div>
+%endif
+${form.render(values=form.values, errors=form.errors, translate=translate)|n}
+
+</%def>

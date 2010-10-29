@@ -1,0 +1,94 @@
+## -*- coding: utf-8 -*-
+<%
+cu=helpers.get_current_user(controller)
+_=translate
+%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>${site_data.title} ${translate('Management screen')}</title>
+
+<!-- CSS -->
+<link href="/style/css/transdmin.css" rel="stylesheet" type="text/css" media="screen" />
+<!--[if IE 6]><link rel="stylesheet" type="text/css" media="screen" href="/style/css/ie6.css" /><![endif]-->
+<!--[if IE 7]><link rel="stylesheet" type="text/css" media="screen" href="/style/css/ie7.css" /><![endif]-->
+
+<!-- JavaScripts-->
+<script type="text/javascript" src="/style/js/jquery.js"></script>
+<script type="text/javascript" src="/style/js/jNice.js"></script>
+<script type="text/javascript" src="/js/ajax.js"></script>
+<%def name="head()">
+%if objects:
+	%for o in objects:
+${o}
+	%endfor
+%endif
+</%def>
+${self.head()}
+</head>
+
+<body>
+	<div id="wrapper">
+		<ul id="mainNav">
+			<li>${('Login as <strong>%s</strong>' % cu.get('nickname', 'N/A'))}
+			<li><a href="/list" ${'class="active"'*bool(not edit_sitedata)}>${_('Edit contents')}</a></li>
+			<li><a href="/_edit_sitedata" ${'class="active"'*bool(edit_sitedata)}>${_('Site setting')}</a></li>
+			<li><a href="${_config.logout_url}">${_('Logout')}</a></li>
+		</ul>
+		<!-- // #end mainNav -->
+		<br clear="all">
+		
+		<div id="containerHolder">
+			<div id="container">
+				<div id="sidebar">
+					<ul class="sideNav">
+					<%
+					url=request.url
+					%>
+					%if side_menu_items:
+						%for i in side_menu_items:
+						<li>
+						<a href="${i[2]}" ${'class="active"'*url.endswith(i[2])}>
+						%if i[0]:
+							<img src="${i[0]}" />
+						%endif
+						${_(i[1])}</a>
+						</li>
+						%if len(i) > 3:
+							%for j in i[3]:
+							<li><a href="${j[2]}" ${'class="active"'*url.endswith(j[2])}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							%if j[0]:
+								<img src="${j[0]}" />
+							%endif
+							${_(j[1])}</a></li>
+							%endfor
+						%endif:
+						%endfor
+					% endif
+					</ul>
+					<!-- // .sideNav -->
+				</div>	
+				<!-- // #sidebar -->
+				
+				<!-- h2 stays for breadcrumbs -->
+				<div id="main">
+				<h2>${helpers.get_breadclumb(path_obj)}</h2>
+				<%def name="main()">
+				This is default empy area of main() definition. Please ignore about it.
+				</%def>
+				${self.main()}
+				</div>
+				<!-- // #main -->
+				
+				<div class="clear"></div>
+			</div>
+			<!-- // #container -->
+		</div>	
+		<!-- // #containerHolder -->
+		
+		<p id="footer"><a href="http://coreblog.org/coreblog3">COREBlog3</a> is based on <a href="http://coreblog.org/croudcms">Cloud CMS</a> powered by Google App Engine &copy <a href="http://www.webcore.co.jp">Webcore Corp.</a></p>
+	</div>
+	<!-- // #wrapper -->
+</body>
+</html>
