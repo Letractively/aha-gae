@@ -53,7 +53,7 @@ class authenticate(object):
         """
         self.args = args
         self.kws = kws
-        if not config.auth_obj and auth_obj:
+        if not hasattr(config, 'auth_obj') and not auth_obj:
             raise ValueError(("""You must specify auth_obj in config """
                               """argument"""))
         if auth_obj:
