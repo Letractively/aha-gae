@@ -108,7 +108,7 @@ def dispatch(hnd):
         # error occured
         raise Exception('%s %s' % ctrl.response._Response__status)
 
-    if not ctrl.has_rendered:
+    if not ctrl.has_rendered and not ctrl.has_redirected:
         ctrl.render(template = route['action'], values = ctrl.__dict__)
 
     # manage cookies
