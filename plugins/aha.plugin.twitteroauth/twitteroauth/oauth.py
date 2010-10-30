@@ -271,7 +271,7 @@ def _oauth_signature(consumer_token, method, url, parameters = {}, token = None)
     base_elems = []
     base_elems.append(method.upper())
     base_elems.append(normalized_url)
-    base_elems.append('&'.join('%s = %s' % (k, _oauth_escape(str(v)))
+    base_elems.append('&'.join('%s=%s' % (k, _oauth_escape(str(v)))
                                for k, v in sorted(parameters.items())))
     base_string =  '&'.join(_oauth_escape(e) for e in base_elems)
 

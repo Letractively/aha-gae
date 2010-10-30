@@ -19,14 +19,15 @@ from google.appengine.api import memcache
 
 from aha.controller.makocontroller import MakoTemplateController
 from aha.controller.decorator import expose
-from aha.auth.twitteroauth import (TwitterOAuth, TWITTER_NAMESPACE,
+from plugin.twitteroauth.twitter_auth import (TwitterOAuth, TWITTER_NAMESPACE,
                                        OAUTH_ACCESS_TOKEN_COOKIE, EXPIRE)
 
-class OauthController(MakoTemplateController):
+class TwitteroauthController(MakoTemplateController):
     """
     A controller to set parameters in cookie sent from twitter
     """
 
+    @expose
     def index(self):
         token = self.params.get('oauth_token')
         oa = TwitterOAuth()
