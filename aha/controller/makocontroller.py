@@ -110,7 +110,13 @@ class MakoTemplateController(BaseController):
         hdrs['Content-Type'] = content_type
         hdrs.update(opt.get('hdr', {}))
 
-        self.view.render(result, hdrs)
+        # pass the output to the response object
+        r = self.response
+        if hdrs:
+            for k, v in hdrs.items():
+                r.headers[k] = v
+        r.out.write(result)
+
         self.has_rendered = True
 
 

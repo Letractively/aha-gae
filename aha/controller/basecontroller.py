@@ -27,7 +27,6 @@ from Cookie import SimpleCookie
 from aha import Config
 from google.appengine.ext.webapp import template
 from django.template import Context, Template
-from aha.controller.baseview import BaseView
 
 class BaseController(object):
     """The BaseController is the base class of action controllers.
@@ -95,9 +94,6 @@ class BaseController(object):
             import application.util.helper
         except ImportError, e:
             pass
-
-        # view object
-        self.view = BaseView(self)
 
     def before_action(self):
         pass
@@ -175,7 +171,13 @@ class BaseController(object):
         hdrs['Content-Type'] = content_type
         hdrs.update(opt.get('hdr', {}))
 
-        self.view.render(result, hdrs)
+        # pass the output to the response object
+        r = self.response
+        if hdrs:
+            for k, v in hdrs.items():
+                r.headers[k] = v
+        r.out.write(result)
+
         self.has_rendered = True
 
     def redirect(self, url, perm = False):
