@@ -1,4 +1,5 @@
 ## -*- coding: utf-8 -*-
+<%namespace file="parts.html" import="*"/>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -47,13 +48,30 @@
 		<div id="page" class="curvy">
 			<div class="width4">
 				<%def name="header()">
-				<header class="column width4 first">
+				<header class="width4">
 					<h1><a href="/">${site_data.title}</a></h1>
 				</header>
 				</%def>
 				${self.header()}
+				<%def name="column_one()">
+				column one
+				</%def>
+				<%def name="column_two(blog)">
+					<aside>
+						<dl>
+							${items(content)}
+						</dl>
+					</aside>
+				</%def>
 				<%def name="main()">
-				This is default empy area of main() definition. Please ignore about it.
+					<section class="width4">
+						<div class="column width3 first">
+							${self.column_one()}
+						</div>
+						<div class="column width1">
+							${self.column_two(blog)}
+						</div>
+					</section>
 				</%def>
 				${self.main()}
 				<footer>
