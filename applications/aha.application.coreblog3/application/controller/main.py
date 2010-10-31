@@ -169,7 +169,7 @@ class MainController(MakoTemplateController):
                 r.write(c['body'])
                 for k, i in c['hdr'].items():
                     resp.headers[k] = i
-                self.view.rendered = True
+                self.has_rendered = True
                 self.cached = True
                 return
         except:
