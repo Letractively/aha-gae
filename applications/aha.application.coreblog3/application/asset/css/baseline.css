@@ -252,6 +252,12 @@ margin: 8px 0;
 header h1 {
 margin: 8px 0;
 width: 385px;
+background: url("/img/site_logo.png") no-repeat;
+}
+
+header h1.tritech {
+margin: 8px 0;
+width: 385px;
 background: url("/img/logo.png") no-repeat;
 }
 
