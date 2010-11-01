@@ -14,14 +14,13 @@ A plugin that ssupplies authentication support of twitter oauth.""",
       author_email='shibata@webcore.co.jp',
       url='http://coreblog.org/aha',
       license='BSD',
-      packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+      packages = [
+        'twitteroauth',
+      ],
       include_package_data=True,
       zip_safe=False,
       install_requires = [
           'aha',
-      ],
-      packages = [
-        'twitteroauth',
       ],
       entry_points="""
       # -*- Entry points: -*-
