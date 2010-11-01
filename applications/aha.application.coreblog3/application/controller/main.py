@@ -113,7 +113,7 @@ def dispatch(hnd, path, params):
     #   or it is not decorated by using expose, raise exception
     #   to avoid unintended method traversal.
     if not actionmethod or not getattr(actionmethod, '_exposed_', False):
-        if not os.environ.get('SERVER_SOFTWARE', '').startswith('Dev'):
+        if not ctrl.config.debug:
             try:
                 PAGE_CACHE_EXPIRE = config.page_cache_expire
             except:
