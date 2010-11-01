@@ -13,11 +13,6 @@
 	<dt>
 		<a href="${path_obj.get_path()}/${o.name}"> ${o.title or o.name} </a>
 	</dt>
-	%if o.description:
-	<dd>
-		${o.description}
-	</dd>
-	%endif
 %endfor
 </dl>
 
