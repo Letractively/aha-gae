@@ -35,27 +35,35 @@ class BaseController(object):
     _template_ext = '.html'
 
     def __init__(self, hnd, params = {}):
-        self.hnd = hnd
-        self.controller = self
-        self.response = hnd.response
-        self.request = hnd.request
-        self.params = params
+        """
+        An initialization method. It sets some attributes for combenience.
         
+        Arguments:
+        hnd     : a request object.
+        params  : parameters given via dispacher.
+        """
+        self.hnd = hnd                  # hander itsrlf
+        self.controller = self          # controller object
+        self.response = hnd.response    # response object
+        self.request = hnd.request      # request object
+        self.params = params            # parameters
+
+        # update parameters when some GET/POST parameters are given.
         for k in self.request.arguments():
             self.params[k] = self.request.get_all(k)
             if len(self.params[k]) == 1:
                 self.params[k] = self.params[k][0]
 
-        self._controller = params['controller']
-        self._action = params['action']
-        self.has_rendered = False
-        self.has_redirected = False
-        self.__config = Config()
+        self._controller = params['controller'] # controller as a string
+        self._action = params['action']         # action as a string
+        self.has_rendered = False               # reset the rendering flag
+        self.has_redirected = False             # reset the redirect flag
+        self.__config = Config()                # config object
 
         self.__tpldir = os.path.join(
             self.__config.template_dir,
             self._controller
-        )
+        )                                       # default template directory
         self._template_values = {}
 
         # implement parameter nesting as in rails
@@ -96,28 +104,50 @@ class BaseController(object):
             pass
 
     def before_action(self):
+        """
+        A method called right before render() method.
+        You can do pre render jobs in this method, something like caching, etc.
+        """
         pass
     
     def after_action(self):
+        """
+        A method called right after render() method.
+        """
         pass
         
 
     def from_json(self, json):
-        """ Convert a JSON string to python object """
+        """
+        Convert a JSON string to python object
+        """
         from django.utils import simplejson
         return simplejson.loads(json)
 
     def to_json(self, obj):
-        """ Convert a dict/list to JSON. Use simplejson """
+        """
+        Convert a dict/list to JSON. Use simplejson
+        """
         from django.utils import simplejson
         return simplejson.dumps(obj)
 
     def parse_opt(self, encode = 'utf-8', **opt):
         """
         A method to parse from the 'opt' argument and get a template.
+        It gets options as a keyword argument and parse them.
+        
+        Expected arguments:
+        encode      : encode for the output.
+        expires     : expire date as a string.
+        html        : raw html for the output.
+        text        : raw text for the output.
+        json        : raw json for the output.
+        xml         : raw xml for the output.
+        script      : raw java script for the output.
+        template    : path to the template file.
         """
         content = ''
-        content_path = ''
+        template_path = ''
         content_type = 'text/html; charset = %s' % encode
         if opt.has_key('expires'):
             hdrs['Expires'] = opt.get('expires')
@@ -125,46 +155,58 @@ class BaseController(object):
         if opt.has_key('html'):
             content = opt.get('html').decode('utf-8')
         elif opt.has_key('text'):
-            content_type = 'text/plain; charset = utf-8'
-            content = str(opt.get('text')).decode('utf-8')
+            content_type = 'text/plain; charset = %s' % encode
+            content = opt.get('text')
         elif opt.has_key('json'):
-            content_type = 'application/json; charset = utf-8'
-            content = opt.get('json').decode('utf-8')
+            content_type = 'application/json; charset = %s' % encode
+            content = opt.get('json')
         elif opt.has_key('xml'):
-            content_type = 'text/xml; charset = utf-8'
-            content = opt.get('xml').decode('utf-8')
+            content_type = 'text/xml; charset = %s' % encode
+            content = opt.get('xml')
         elif opt.has_key('script'):
-            content_type = 'text/javascript; charset = utf-8'
-            content = opt.get('script').decode('utf-8')
+            content_type = 'text/javascript; charset = %s' % encode
+            content = opt.get('script')
         elif opt.has_key('template'):
             tpname = opt.get('template')+self._template_ext
-            content_path = os.path.join(self._controller, tpname)
-        elif opt.has_key('template_string'):
-            contnetopt.get('template_string')
-        return content, content_path, content_type
+            template_path = os.path.join(self._controller, tpname)
+        return content, template_path, content_type
 
     def render(self, *html, **opt):
+        """
+        A method to render output.
+        It gets arguments to control rendering result.
+        It receives template string as non keyword argument, and
+                following arguments.
+
+        Expected arguments:
+        encode      : encode for the output.
+        expires     : expire date as a string.
+        html        : raw html for the output.
+        text        : raw text for the output.
+        json        : raw json for the output.
+        xml         : raw xml for the output.
+        script      : raw java script for the output.
+        template    : path to the template file.
+        """
         hdrs = {}
 
         content_type = 'text/html; charset = utf-8'
         
         if html:
-            content = (''.join(html)).decode('utf-8')
+            content = u''.join(html)
             content_path=''
         elif opt:
-            content, content_path, content_type = self.parse_opt(**opt)
+            content, template_path, content_type = self.parse_opt(**opt)
         context = self.__dict__
         if isinstance(opt.get('values'), dict):
             context.update(opt.get('values'))
         # render content as a template
-        if content_path:
+        if template_path:
             t= Template(content_path)
             c = Context(context)
             result = t.render(content_path, context)
         elif content:
-            t = Template(content.encode('utf-8'))
-            c = Context(context)
-            result = t.render(c)
+            result = t.render(content)
         else:
             raise Exception('Render type error')
 
@@ -181,13 +223,17 @@ class BaseController(object):
         self.has_rendered = True
 
     def redirect(self, url, perm = False):
+        """
+        A method to redirect response.
+        """
         self.has_redirected = True 
         self.has_rendered = True 
                     # dirty hack, make aha don't find the template
         self.hnd.redirect(url, perm)
 
     def respond_to(self, **blk):
-        """ according to self.params['format'] to respond appropriate stuff
+        """
+        according to self.params['format'] to respond appropriate stuff
         """
         if self.params.has_key('format') and \
                 blk.has_key(self.params['format']):
