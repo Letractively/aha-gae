@@ -28,6 +28,8 @@ import aha
 import helper
 
 from aha.controller.basecontroller import BaseController
+from aha import Config
+config=Config()
 
 from mako import template, exceptions
 from mako.lookup import TemplateLookup
@@ -44,18 +46,18 @@ def get_lookup(du = False):
         SS = os.environ.get('SERVER_SOFTWARE','')
         config = aha.Config()
         tpdirs = config.template_dirs
-        if not SS.lower().startswith("dev"):
+        if config.debug:
+            tlookup = TemplateLookup(directories = tpdirs, 
+                 disable_unicode = du,
+                 input_encoding = charset,
+                 output_encoding = charset)
+        else:
             tlookup = TemplateLookup(directories = tpdirs, 
                  disable_unicode = du,
                  input_encoding = charset,
                  output_encoding = charset,
                  filesystem_checks = False, cache_type = 'memcached',
                  cache_dir = ".", cache_url = 'memcached://')
-        else:
-            tlookup = TemplateLookup(directories = tpdirs, 
-                 disable_unicode = du,
-                 input_encoding = charset,
-                 output_encoding = charset)
         logging.debug('new TemplateLookup is loaded.')
 
 
@@ -77,6 +79,22 @@ class MakoTemplateController(BaseController):
         get_lookup(du)
 
     def render(self, *html, **opt):
+        """
+        A method to render output by using mako template.
+        It gets arguments to control rendering result.
+        It receives template string as non keyword argument, and
+                following arguments.
+
+        Expected arguments:
+        encode      : encode for the output.
+        expires     : expire date as a string.
+        html        : raw html for the output.
+        text        : raw text for the output.
+        json        : raw json for the output.
+        xml         : raw xml for the output.
+        script      : raw java script for the output.
+        template    : path to the template file.
+        """
         hdrs = {}
 
         content_type = 'text/html; charset = %s' % self._charset
@@ -121,6 +139,9 @@ class MakoTemplateController(BaseController):
 
 
 def patch_beaker():
+    """
+    A function to patch baker to store compiled template object in memcache.
+    """
     import sys
     import google.appengine.api.memcache
     sys.modules['memcache'] = google.appengine.api.memcache
@@ -131,15 +152,17 @@ def patch_beaker():
                             lambda x, y: synchronization.null_synchronizer()
 
 def mako_patch():
+    """
+    A function to patch mako to store compiled template in memcache.
+    In debug mode(config.debug == True), It never store them in memcache.
+    """
     from mako.template import Lexer, codegen, types
     from google.appengine.api import memcache
     cvid = os.environ.get('CURRENT_VERSION_ID','')
     
     def _compile_text(template, text, filename):
         identifier = template.module_id
-        no_cache = identifier.startswith('memory:') or \
-            os.environ.get('SERVER_SOFTWARE','').lower().startswith("dev")
-        #no_cache = identifier.startswith('memory:')
+        no_cache = identifier.startswith('memory:') or config.debug
         cachekey = 'makosource:%s:%s' % (str(cvid), str(identifier))
         if not no_cache:
             source = memcache.get(cachekey)
@@ -166,8 +189,10 @@ def mako_patch():
     
     template._compile_text = _compile_text
 
+# perform patches to mako, baker.
+
 try:
-    if not os.environ.get('SERVER_SOFTWARE','').lower().startswith("dev"):
+    if not config.debug:
         patch_beaker()
         mako_patch()
 except:
