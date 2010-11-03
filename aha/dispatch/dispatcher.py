@@ -23,7 +23,7 @@ import logging
 from inspect import ismethod
 from urlparse import urlsplit
 
-import router
+from router import get_router, get_fallback_router
 import sys 
 import os
 from traceback import *
@@ -39,12 +39,16 @@ def dispatch(hnd):
     """
     # resolve the URL
     url = hnd.request.path
-    r = router.Router()
-    route = r.resolve(url)
+    r = get_router()
+    route = r.match(url)
 
-    if route is None:
-        # raise exception because we couldn't find route for given url
-        raise Exception('No route for url:%s' % url)
+    if not route:
+        fr = get_fallback_router()
+        fr.match(url)
+        route = fr.match(url)
+        if not route:
+            # raise exception because we couldn't find route for given url
+            raise Exception('No route for url:%s' % url)
 
     # create the appropriate controller
     ctrlname = route['controller']
@@ -82,10 +86,10 @@ def dispatch(hnd):
     #   or it is not decorated by using expose, raise exception
     #   to avoid unintended method traversal.
     if not actionmethod or not getattr(actionmethod, '_exposed_', False):
-        if not os.environ.get('SERVER_SOFTWARE', '').startswith('Dev'):
+        if not ctrl.config.debug:
             try:
                 PAGE_CACHE_EXPIRE = config.page_cache_expire
-            except:
+            except AttributeError:
                 PAGE_CACHE_EXPIRE = 60*60
             p = urlsplit(hnd.request.url)[2]
             memcache.set(p, 'error', PAGE_CACHE_EXPIRE)
