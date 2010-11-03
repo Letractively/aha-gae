@@ -115,6 +115,8 @@ class cache(object):
         self.func = func
         def execute(me):
             r = self.func(me, *args, **kws)
+            if self.expire == 0:
+                return
             resp = me.response
             out = resp.out
             out.seek(0)
