@@ -6,6 +6,10 @@ import os
 def appConfig():
     import aha
     config = aha.Config()
+    # initialize route and the installed plugins
+    from aha.dispatch.router import get_router, get_fallback_router
+    # initialize router with default rule.
+    r = get_router()
 
     # setting up well known config attributes
     config.initial_user = ['test@example.com', 'shib.ats@gmail.com', 'ats']
@@ -21,30 +25,26 @@ def appConfig():
             ('/style/img/edit_icon.gif', 'Site setting', '/_edit_sitedata' ),
             ]
 
-    # initialize route and the installed plugins
-    from aha.dispatch import router
-    # initialize router with fallback rule.
-    fb = [router.Rule('.*', controller = 'main', action = "index")]
-    r = router.Router(fallback = fb)
     # urls for admin interfaces
-    r.connect('^/_edit_sitedata', controller = 'sitedata', action = 'edit')
+    r.connect(r'/_edit_sitedata', controller = 'sitedata', action = 'edit')
 
-    """
     from plugin.twitteroauth.twitter_auth import TwitterOAuth
     config.auth_obj = TwitterOAuth
 
     # route fot oauth redirector.
-    r.connect('^/_oauth', controller = 'twitteroauth')
+    r.connect('/_oauth', controller = 'twitteroauth')
 
-    config.consumer_key = 'wILd7AIBlLUTQNkMk4Aew'
-    config.consumer_secret = 'CjalJllTlWAZIaqElA8egqsWFWLBkxAWNQNvjDUvwk'
-    """
+    config.consumer_key = '8tvBBBU4P8SqPypC1X4tpA'
+    config.consumer_secret = 'RGdpAxEnuETjKQdpDxsJkR67Ki16st6gfv4URhfdM'
 
     # set the default authenticate function
     from util.authenticate import admin
     config.admin_auth = admin
-    config.debug = True
     config.useappstatus = False
+
+    # set the fallback route leading to object structure dispatcher
+    fr = get_fallback_router()
+    fr.connect(r'*url', controller = 'main', action = 'index')
 
     if config.debug:
         from aha.auth.appengine import AppEngineAuth
