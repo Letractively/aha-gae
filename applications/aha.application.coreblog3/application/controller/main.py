@@ -42,11 +42,12 @@ def get_path_obj(path, in_rest = []):
     """
     A function to obtain Path object from given url
     """
+    if not path:
+        return None, None
     if path.endswith('/'): path = path[:-1]
     # try to find full url
     q = Path.all()
     q.filter('path =', path)
-    #if q.count(10):
     pl = list(q.fetch(1))
     if pl:
         p = pl[0]
@@ -55,7 +56,7 @@ def get_path_obj(path, in_rest = []):
 
     pl = path.split(DLMT)
 
-    #if path object couldn't be found,
+    #if no path object found,
     #  try to find another one removing the tail.
     return get_path_obj(DLMT.join(pl[:-1]), [pl[-1]]+in_rest)
 
@@ -177,6 +178,10 @@ class MainController(MakoTemplateController):
 
         sc, loc, path, param, q, f = urlparse(self.request.url)
         p, m = get_path_obj(path)
+        if p is None:
+            self.response.set_status(404)
+            m = '%s %s (Object not found)'
+            raise Exception('%s (Object not found)' % path)
         self.path_obj = p
         if config.debug:
             dispatch(self, p, m)
