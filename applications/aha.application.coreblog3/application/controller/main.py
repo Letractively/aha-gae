@@ -42,13 +42,13 @@ def get_path_obj(path, in_rest = []):
     """
     A function to obtain Path object from given url
     """
-    if not path:
-        return None, None
     if path.endswith('/'): path = path[:-1]
     # try to find full url
     q = Path.all()
     q.filter('path =', path)
     pl = list(q.fetch(1))
+    if not path and not pl:
+        return None, None
     if pl:
         p = pl[0]
         rest = path.replace(p.get_path(), '')
