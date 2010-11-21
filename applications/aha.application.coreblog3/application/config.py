@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
 
+# config.py
+#
+# The application specific configulation comes here.
+#
+
+__author__  = 'Atsushi Shibata <shibata@webcore.co.jp>'
+__docformat__ = 'plaintext'
+__licence__ = 'BSD'
+
 import logging
 import os
 
@@ -12,8 +21,12 @@ def appConfig():
     r = get_router()
 
     # setting up well known config attributes
-    config.initial_user = ['test@example.com', 'shib.ats@gmail.com', 'ats']
-    config.site_root = 'http://coreblog.org'
+
+    # put initial user to access admin interface at the first time.
+    config.initial_user = ['test@example.com']
+    # put your site root here.
+    config.site_root = 'http://your.site'
+
     config.error_template = '/common/error'
     config.logout_url = '/logout'
 
@@ -28,33 +41,15 @@ def appConfig():
     # urls for admin interfaces
     r.connect(r'/_edit_sitedata', controller = 'sitedata', action = 'edit')
 
-    from plugin.twitteroauth.twitter_auth import TwitterOAuth
-    config.auth_obj = TwitterOAuth
-
-    # route fot oauth redirector.
-    r.connect('/_oauth', controller = 'twitteroauth')
-
-    config.consumer_key = '8tvBBBU4P8SqPypC1X4tpA'
-    config.consumer_secret = 'RGdpAxEnuETjKQdpDxsJkR67Ki16st6gfv4URhfdM'
-
     # set the default authenticate function
     from util.authenticate import admin
     config.admin_auth = admin
-    config.useappstatus = False
 
     # set the fallback route leading to object structure dispatcher
     fr = get_fallback_router()
     fr.connect(r'*url', controller = 'main', action = 'index')
 
     if config.debug:
-        from aha.auth.appengine import AppEngineAuth
-        config.auth_obj = AppEngineAuth
-        """
-        from plugin.user.datastoreauth import DataStoreAuth
-        config.auth_obj = DataStoreAuth
-        config.login_url = '/login'
-        """
-
         config.page_cache_expire = 0  # no caceh in development envronment.
         config.query_cache_expire = 0  # no caceh in development envronment.
 
