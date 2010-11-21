@@ -25,6 +25,7 @@ import re
 import logging
 
 from google.appengine.ext import db
+
 try:
     from aha.model.cachedmodel import CachedModelBase as DBBASEMODEL
 except:
