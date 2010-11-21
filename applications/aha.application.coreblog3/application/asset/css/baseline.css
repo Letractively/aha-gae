@@ -251,28 +251,12 @@ margin: 8px 0;
 
 header h1 {
 margin: 8px 0;
-width: 385px;
-background: url("/img/site_logo.png") no-repeat;
-}
-
-header h1.tritech {
-margin: 8px 0;
-width: 385px;
-background: url("/img/logo.png") no-repeat;
+font-family: arial;
 }
 
 header h1 a {
-display: block;
 text-decoration: none;
-overflow: hidden;
-border: 0;
-margin: 0;
-padding: 0;
-padding-top: 59px;
-height: 0px !important;
-height /**/: 59px;
-width: 385px;
-cursor: pointer;
+color: #444;
 }
 
 /* navigations */
@@ -296,7 +280,7 @@ background: url("../img/link_icon.png") no-repeat 0px 1px;
 
 nav li a {
 text-decoration: none;
-color: #a64;
+color: #ccc;
 }
 
 nav li a:hover {
@@ -322,7 +306,7 @@ padding: 0;
 
 
 div.entrytitle {
-background: #645;
+background: #666;
 }
 
 .entrytitle h2 {
@@ -347,8 +331,8 @@ color: #ddd;
 
 
 header div.entryinfo {
-background-color: #ede;
-border-top: 2px solid #645;
+background-color: #ddd;
+border-top: 2px solid #666;
 }
 
 header div.entryinfo ul {
@@ -408,7 +392,7 @@ margin: 0;
 padding: 2px 4px;
 font-size: 9pt;
 font-weight: bold;
-background: #645;
+background: #666;
 color: #fff;
 }
 
@@ -416,7 +400,7 @@ aside dd {
 margin: 0 0 8px 0;
 padding: 4px 4px 12px 4px;
 font-size: 9pt;
-background: #ede;
+background: #eee;
 color: #111;
 }
 
@@ -446,11 +430,11 @@ border-bottom: 1px dotted black;
 
 aside dd a {
 text-decoration: none;
-color: #425;
+color: #333;
 }
 
 aside dd a:hover {
-color: #a9b;
+color: #888;
 }
 
 aside dd.partsbody time {
@@ -499,15 +483,15 @@ font-weight: bold;
 }
 
 article a {
-color: #86a;
+color: #444;
 }
 
 article a:hover {
-color: #b9c;
+color: #666;
 }
 
 article a:visited {
-color: #546;
+color: #444;
 }
 
 article ul,
@@ -524,8 +508,8 @@ padding-left: 50px;
 line-height: 20px;
 font-family:Monaco,"Courier New",Tahoma;
 background: url('/img/back_code.gif') left top repeat-y;
-border-bottom: 1px solid #CCEEDD;
-border-right: 1px solid #CCEEDD;
+border-bottom: 1px solid #ccc;
+border-right: 1px solid #ccc;
 white-space: pre-wrap;
 word-wrap: break-word; /* IE6, IE7 hack */
 }
@@ -577,7 +561,7 @@ display: block;
 }
 
 section.commentform div.form-container div.controlset.required label {
-color: #842;
+color: #888;
 }
 
 div.comment {
@@ -586,13 +570,13 @@ margin: 0 0 1em 0;
 section.comments h2 {
 font-size: 12pt;
 font-weight: bold;
-color: #425;
+color: #444;
 }
 
 div.comment h3 {
 font-size: 10pt;
 font-weight: bold;
-color: #425;
+color: #444;
 padding: 0;
 margin: 0;
 text-align: left;
@@ -631,6 +615,11 @@ text-align: center;
 font-size: 9pt;
 display:block;
 }
+
+footer a {
+color: #222;
+}
+
 
 ul.flat
 {
