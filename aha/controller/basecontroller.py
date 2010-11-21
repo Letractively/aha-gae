@@ -55,7 +55,7 @@ class BaseController(object):
                 self.params[k] = self.params[k][0]
 
         self._controller = params['controller'] # controller as a string
-        self._action = params['action']         # action as a string
+        self._action = params.get('action', 'index') # action as a string
         self.has_rendered = False               # reset the rendering flag
         self.has_redirected = False             # reset the redirect flag
         self.__config = Config()                # config object
