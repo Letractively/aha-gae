@@ -75,12 +75,12 @@ def dispatch(hnd):
     logging.debug('URL "%s" is dispatched to: %sController#%s',
                  url,
                  route['controller'].capitalize(),
-                 route['action'])
+                 route.get('action', 'index'))
 
     ctrl.config = Config()
 
     # get the action from the controller
-    actionmethod = getattr(ctrl, route['action'], None)
+    actionmethod = getattr(ctrl, route.get('action', 'index'), None)
 
     # if the action is none ,
     #   or it is not decorated by using expose, raise exception
