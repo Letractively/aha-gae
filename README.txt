@@ -14,14 +14,26 @@ aha is a web application framework. It has been developed hoping it will be the 
 
 aha has following features.
 
-- 
+- rails like routing
+- class based model
+- mako template ( for speed ;-) )
+- db / query cache
+- form, field generation
+- plugins
+- development with buildout
+- easy to make admin/crud interface
+- interactive debug interface using werkzeug
+- appstats integration
+- easy to use decorator based authentication
+- plagable authentication mecanizm
+- i18n
 
 
 Quickstart
 -----------------------
 To start developing with aha, download bootstrap from url bellow.
 
-  http://coreblog.org/aha/project.zip
+  http://aha-gae.googlecode.com/files/project.zip
 
 After extracting the archive, move to the folder you'll get and just type
 
