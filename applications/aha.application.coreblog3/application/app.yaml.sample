@@ -1,0 +1,27 @@
+application: coreblogorg
+version: 9
+runtime: python
+api_version: 1
+
+derived_file_type:
+- python_precompiled
+
+handlers:
+- url: /css
+  static_dir: application/asset/css
+- url: /js
+  static_dir: application/asset/js
+- url: /img
+  static_dir: application/asset/img
+- url: /style
+  static_dir: application/asset/style
+- url: /favicon.ico
+  static_files: favicon.ico
+  upload: favicon.ico
+
+- url: /_ah/stats.*
+  script: $PYTHON_LIB/google/appengine/ext/appstats/ui.py
+
+- url: .*
+  script: main.py
+
