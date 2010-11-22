@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.81b'
+version = '0.82b'
 
 setup(name='aha.application.default',
       version=version,
