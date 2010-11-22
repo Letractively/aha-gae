@@ -44,6 +44,8 @@ def appConfig():
     # set the default authenticate function
     from util.authenticate import admin
     config.admin_auth = admin
+    from aha.auth.appengine import AppEngineAuth
+    config.auth_obj = AppEngineAuth
 
     # set the fallback route leading to object structure dispatcher
     fr = get_fallback_router()
