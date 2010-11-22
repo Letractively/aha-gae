@@ -191,10 +191,10 @@ class BaseController(object):
         hdrs = {}
 
         content_type = 'text/html; charset = utf-8'
-        
         if html:
             content = u''.join(html)
-            content_path=''
+            content_path = ''
+            template_path = ''
         elif opt:
             content, template_path, content_type = self.parse_opt(**opt)
         context = self.__dict__
@@ -206,7 +206,7 @@ class BaseController(object):
             c = Context(context)
             result = t.render(content_path, context)
         elif content:
-            result = t.render(content)
+            result = content
         else:
             raise Exception('Render type error')
 
