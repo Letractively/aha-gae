@@ -67,7 +67,7 @@ class BlogController(ContainerBase):
                                          c.get_path()+'/edit' ),
             ('/style/img/add_icon.gif', 'Add', '#',
                 [('/style/img/%s_icon.gif' % x.lower(),
-                  x, (c.get_path()+'/add?type = %s')%x)
+                  x, (c.get_path()+'/add?type=%s')%x)
                         for x in addable],
             )
             )
