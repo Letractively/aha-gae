@@ -30,6 +30,9 @@ from google.appengine.api import memcache
 from google.appengine.ext.webapp import template
 from django.template import Context, Template
 
+from aha.controller.decorator import cache
+
+
 class BaseController(object):
     """The BaseController is the base class of action controllers.
         Action controller handles the requests from clients.
@@ -179,8 +182,11 @@ class BaseController(object):
         It fill output by using memcache and returns true if cache exists,
              return false if not.
         """
+        namespace = ''
+        if cache.namespace_func:
+            namespace = cache.namespace_func(self.request)
         p = urlsplit(self.request.url)[2]
-        c = memcache.get(p)
+        c = memcache.get(p, namespace = namespace)
         if c:
             # in case a given url has cached, we use it to make a response.
             resp = self.response
