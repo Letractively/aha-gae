@@ -22,9 +22,11 @@ import os
 import new
 import re
 import logging
+from urlparse import urlsplit
 from Cookie import SimpleCookie
 
 from aha import Config
+from google.appengine.api import memcache
 from google.appengine.ext.webapp import template
 from django.template import Context, Template
 
@@ -171,6 +173,26 @@ class BaseController(object):
             template_path = os.path.join(self._controller, tpname)
         return content, template_path, content_type
 
+    def check_memcache(self):
+        """
+        A method to check if page is cached in memcache.
+        It fill output by using memcache and returns true if cache exists,
+             return false if not.
+        """
+        p = urlsplit(self.request.url)[2]
+        c = memcache.get(p)
+        if c:
+            # in case a given url has cached, we use it to make a response.
+            resp = self.response
+            r = self.response.out
+            r.write(c['body'])
+            for k, i in c['hdr'].items():
+                resp.headers[k] = i
+            self.has_rendered = True
+            self.cached = True
+            return True
+        return False
+
     def render(self, *html, **opt):
         """
         A method to render output.
@@ -188,6 +210,11 @@ class BaseController(object):
         script      : raw java script for the output.
         template    : path to the template file.
         """
+
+        # try to check the page is cached or not.
+        if self.check_memcache():
+            return
+
         hdrs = {}
 
         content_type = 'text/html; charset = utf-8'
@@ -202,9 +229,9 @@ class BaseController(object):
             context.update(opt.get('values'))
         # render content as a template
         if template_path:
-            t= Template(content_path)
+            t= Template(template_path)
             c = Context(context)
-            result = t.render(content_path, context)
+            result = t.render(context)
         elif content:
             result = content
         else:
