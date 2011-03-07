@@ -106,7 +106,24 @@ except:
 class cache(object):
     """
     A decorator to cache response.
+    You can control decorate function by giving arguments.
+    
+    expire         : is used to specify expiration time by giving seconds.
+
+    You can set special class namespace to control namespace of the cache.
+    Or you can also use set_namespace_func() classmethod to set it
+         outside of the class.
+
+    namespace_func : is used to set hook function, 
+                        which returns namespace for memcache sotre.
+                     The hook function is called along with request object.
+                     You can use the hook function to return different response
+                        seeing language, user agent etc. in header.
+
+
     """
+    namespace_func = None
+
     def __init__(self, expire = PAGE_CACHE_EXPIRE):
         self.expire = expire
 
@@ -122,14 +139,24 @@ class cache(object):
             out.seek(0)
             try:
                 p = urlsplit(me.request.url)[2]
+                namespace = ''
+                if self.namespace_func:
+                    namespace = self.namespace_func(me.request)
                 memcache.set(p, {'hdr':resp.headers,'body':out.read()},
-                             self.expire)
+                             self.expire, namespace=namespace)
                 logging.debug('%s is cahed' % p)
             except:
                 memcache.flush_all()
                 logging.debug('memcache is flashed.')
 
         return execute
+
+    @classmethod
+    def set_namespace_func(cls, func):
+        """
+        A classmethod to set namespace function.
+        """
+        cls.namespace_func = staticmethod(func)
 
 
 def mail(): pass;
