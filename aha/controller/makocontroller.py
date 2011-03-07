@@ -95,6 +95,9 @@ class MakoTemplateController(BaseController):
         script      : raw java script for the output.
         template    : path to the template file.
         """
+        # try to check the page is cached or not.
+        if self.check_memcache():
+            return
         hdrs = {}
 
         content_type = 'text/html; charset = %s' % self._charset
