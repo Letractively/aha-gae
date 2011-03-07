@@ -25,6 +25,8 @@ config = Config()
 from folder import ContainerBase, ContainerEditHandler, ContainerAddHandler
 from model import Blog, BlogEntry, BlogCategory, BlogComment, BlogTrackback
 
+from config import check_for_spartphone
+
 class BlogentryEditHandler(ContainerEditHandler):
     FC = FormControl()
 
@@ -231,6 +233,7 @@ class BlogentryController(ContainerBase):
         """
         A handler for blog entry.
         """
+        self.smartphone = check_for_spartphone(self.request)
         self.blog = self.content.blog_object()
         self.get_comment_form = self.make_comment_form
         self.render(template = self.INDEX_TEMPLATE)
