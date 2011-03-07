@@ -160,21 +160,8 @@ class MainController(MakoTemplateController):
         """
         A method to show list of published object.
         """
-        p = urlsplit(self.request.url)[2]
-        c = memcache.get(p)
-        try:
-            if c:
-                # in case a given url has cached, we use it to make a response.
-                resp = self.response
-                r = self.response.out
-                r.write(c['body'])
-                for k, i in c['hdr'].items():
-                    resp.headers[k] = i
-                self.has_rendered = True
-                self.cached = True
-                return
-        except:
-            pass
+        if self.check_memcache():
+            return
 
         sc, loc, path, param, q, f = urlparse(self.request.url)
         p, m = get_path_obj(path)
