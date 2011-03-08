@@ -5,6 +5,7 @@ import logging
 log = logging.getLogger(__name__)
 
 from nose.tools import *
+from google.appengine.api import memcache
 
 from aha.controller.decorator import *
 
@@ -71,5 +72,68 @@ class TestDecorators(TestCase):
         assert_true(hasattr(foo, '_exposed_'))
         # check if foo,._exposed_ = True
         assert_true(foo._exposed_)
+
+    def test_cache(self):
+        """
+        Test for cache decorator
+        """
+        import StringIO
+
+        def nsfunc(request):
+            return request.namespace
+
+        class dummy_req(object):
+            pass
+
+        class handler(object):
+            def __init__(self):
+                self.response = dummy_req()
+                self.response.headers = ''
+                dummy_req.out = StringIO.StringIO()
+                self.request = dummy_req()
+
+            @cache()
+            def handle1(self):
+                self.response.out = StringIO.StringIO()
+                self.response.out.write('handle1')
+
+            @cache(expire = 0)
+            def handle2(self):
+                self.response.out = StringIO.StringIO()
+                self.response.out.write('handle2')
+
+
+        class handler2(handler):
+
+            @cache()
+            def handle3(self):
+                self.response.out = StringIO.StringIO()
+                self.response.out.write('handle3')
+
+        hdn = handler()
+
+        # check if simple cache decorator stores response to the memcache.
+        hdn.request.url = 'http://example.com/the_url'
+        hdn.handle1()
+        assert_equal(memcache.get('/the_url').get('body', ''), 'handle1')
+
+        # check if cache decorator with expire = 0 stores no cache.
+        memcache.flush_all()
+        hdn.handle2()
+        assert_equal(memcache.get('/the_url'), None)
+
+        # check if cache decorator with name space function store a cache
+        #        along with the namespace returned by the function
+        hdn2 = handler2()
+        hdn2.request.url = 'http://example.com/the_url'
+        cache.set_namespace_func(nsfunc)
+
+
+        memcache.flush_all()
+        hdn2.request.namespace = 'ns'
+        hdn2.handle3()
+        assert_equal(memcache.get('/the_url'), None)
+        assert_equal(memcache.get('/the_url', namespace = 'ns').get('body'),
+                     'handle3')
 
 
