@@ -27,13 +27,23 @@ class TwitteroauthController(MakoTemplateController):
     A controller to set parameters in cookie sent from twitter
     """
 
+
+    def __init__(self, hnd, params = {}):
+        """
+        Initialize method
+        """
+        super(TwitteroauthController, self).__init__(hnd, params)
+        self.auth_obj = None
+
+
     @expose
     def index(self):
         token = self.params.get('oauth_token')
-        oa = TwitterOAuth()
-        oa.request = self.request
-        oa.request.args = self.request.params
-        oa.get_authenticated_user(self._post_action)
+        self.auth_obj = TwitterOAuth()
+        self.auth_obj.request = self.request
+        self.auth_obj.request.args = self.request.params
+        self.auth_obj.get_authenticated_user(self._post_action)
+
 
     def _post_action(self, user):
         """
@@ -59,6 +69,31 @@ class TwitteroauthController(MakoTemplateController):
                 self.redirect('/')
 
         self.render(template = '/common/blank')
+
+
+    def twitter_request(self, path, access_token, callback = None,
+                           post_args = None, **args):
+        """
+        A method to send request to twitter, by using informations in auth_obj.
+        """
+        api = self.auth_obj
+        if not api:
+            raise ValueError(("auth_obj is None. You must do "
+                              "oauth authentication before sending request."))
+        if not callback:
+            callback = self._dummy_callback
+        api.twitter_request(
+                    path,
+                    post_args = post_args,
+                    access_token = access_token,
+                    callback = callback)
+
+
+    def _dummy_callback(self, arg):
+        """
+        Dummy callback. Do nothing.
+        """
+        pass
 
 
 def main(): pass;
