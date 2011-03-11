@@ -110,6 +110,15 @@ class MainHandler(RequestHandler):
         dispatcher.dispatch(self)
 
     def handle_exception(self, exception, debug_mode):
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.out.write(exception)
+        from aha import Config
+        config = Config()
+        if config.template_lookup and config.error_template:
+            # get error template in config and make response by using it.
+            t = config.template_lookup.get_template(config.error_template)
+            result = t.render()
+            self.response.out.write(result)
+        else:
+            # make output as normal exception
+            self.response.headers['Content-Type'] = 'text/plain'
+            self.response.out.write(exception)
 
