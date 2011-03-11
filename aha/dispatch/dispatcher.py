@@ -48,6 +48,7 @@ def dispatch(hnd):
         route = fr.match(url)
         if not route:
             # raise exception because we couldn't find route for given url
+            hnd.response.set_status(404)
             raise Exception('No route for url:%s' % url)
 
     # create the appropriate controller
