@@ -3,13 +3,15 @@
 ##############################################################################
 #
 # twitteroauth.py
-# A module to provide auth handler of Twitter OAuth.
+# A module to provide auth handler of Twitter OAuth,
 #                            stores user data in memcache.
 #
 # Copyright (c) 2010 Webcore Corp. All Rights Reserved.
 #
 ##############################################################################
-""" appengine.py - A module to provide auth handler of Twitter OAuth
+""" twitteroauth.py
+A module to provide auth handler of Twitter OAuth, 
+                        stores user data in memcache.
 
 $Id: appengine.py 638 2010-08-10 04:05:57Z ats $
 """
@@ -48,8 +50,10 @@ class TwitterOAuth(BaseAuth, TwitterMixin):
         """
         self.controller = ins
         url = self.authenticate_redirect()
-        if url:
-            ins.redirect(url)
+        if not url:
+            raise ValueError("authenticate_redirect() didn't return url.")
+        
+        ins.redirect(url)
 
 
     def get_user(self, ins, *param, **kws):
