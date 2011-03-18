@@ -116,8 +116,4 @@ def dispatch(hnd):
     if not ctrl.has_rendered and not ctrl.has_redirected:
         ctrl.render(template = route['action'], values = ctrl.__dict__)
 
-    # manage cookies
-    if ctrl.post_cookie.keys():
-        c = ctrl.post_cookie
-        cs = c.output().replace('Set-Cookie: ', '')
-        ctrl.response.headers.add_header('Set-Cookie', cs)
+    ctrl.put_cookies()
