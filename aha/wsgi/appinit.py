@@ -6,7 +6,7 @@ __author__  = 'Atsushi Shibata <shibata@webcore.co.jp>'
 __docformat__ = 'plaintext'
 __licence__ = 'BSD'
 
-__all__ = ['initConfig', 'initPlugins', 'run']
+__all__ = ['initConfig', 'initPlugins', 'run', 'get_app']
 
 import os
 import sys
@@ -61,17 +61,31 @@ def initPlugins(basedir):
                     logging.error('Unable to import name %s' % (plugin))
                     logging.error(format_exc())
 
-
 _debugged_app = None
 
-def run(debug = False, useappstatus = False):
+def run(debug = False, useappstatus = False, dispatcher = None):
     """
     A function to run wsgi server
     """
+    from aha.wsgi.cwsgiapp import CustomHandler
+    app = get_app(debug, dispatcher)
+    if useappstatus:
+        from google.appengine.ext.appstats import recording
+        app = app = recording.appstats_wsgi_middleware(app)
+
+        from google.appengine.ext.webapp.util import run_wsgi_app
+        run_wsgi_app(app)
+    else:
+        CustomHandler().run(app) 
+
+
+def get_app(debug = False, dispatcher = None):
+    """
+    A function to get wsgi server object.
+    """
     if debug:
         # use our debug.utils with Jinja2 templates
-        from aha.wsgi.cwsgiapp import (CWSGIApplication, CustomHandler,
-                                           MainHandler)
+        from aha.wsgi.cwsgiapp import (CWSGIApplication, MainHandler)
         from aha.wsgi.debug import utils
 
         app = CWSGIApplication(
@@ -92,14 +106,7 @@ def run(debug = False, useappstatus = False):
         else:
             app = _debugged_app
 
-        if useappstatus:
-            from google.appengine.ext.appstats import recording
-            app = app = recording.appstats_wsgi_middleware(app)
-
-            from google.appengine.ext.webapp.util import run_wsgi_app
-            run_wsgi_app(app)
-        else:
-            CustomHandler().run(app) 
+        return app
 
     else:
         from google.appengine.ext.webapp.util import run_wsgi_app
@@ -108,11 +115,7 @@ def run(debug = False, useappstatus = False):
         app = WSGIApplication(
                 [(r'.*', MainHandler)],
                 debug = debug)
-        if useappstatus:
-            from google.appengine.ext.appstats import recording
-            app = app = recording.appstats_wsgi_middleware(app)
-
-        run_wsgi_app(app)
+        return app
 
 
 def patch_werkzeug():
