@@ -59,7 +59,7 @@ class BaseController(object):
             if len(self.params[k]) == 1:
                 self.params[k] = self.params[k][0]
 
-        self._controller = params['controller'] # controller as a string
+        self._controller = params.get('controller', '') # controller as a string
         self._action = params.get('action', 'index') # action as a string
         self.has_rendered = False               # reset the rendering flag
         self.has_redirected = False             # reset the redirect flag
@@ -254,6 +254,16 @@ class BaseController(object):
         r.out.write(result)
 
         self.has_rendered = True
+
+    def put_cookies(self):
+        """
+        A method to put cookies to the response,
+             called after render(), redirect() etc.
+        """
+        if self.post_cookie.keys():
+            c = self.post_cookie
+            cs = c.output().replace('Set-Cookie: ', '')
+            self.response.headers.add_header('Set-Cookie', cs)
 
     def redirect(self, url, perm = False):
         """
