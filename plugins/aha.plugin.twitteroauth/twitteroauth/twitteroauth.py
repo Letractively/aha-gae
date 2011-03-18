@@ -34,6 +34,7 @@ class TwitteroauthController(MakoTemplateController):
         """
         super(TwitteroauthController, self).__init__(hnd, params)
         self.auth_obj = None
+        
 
 
     @expose
@@ -60,15 +61,16 @@ class TwitteroauthController(MakoTemplateController):
                }
             memcache.set(self.cookies.get(OAUTH_ACCESS_TOKEN_COOKIE),
                          d, namespace = TWITTER_NAMESPACE, time = EXPIRE)
-            rurl = self.session['referer']
-            del self.session['referer']
-            self.session.put()
+            rurl = self.session.get('referer', '')
             if rurl:
+                # clear 'referer' key in session object.
+                del self.session['referer']
+                self.session.put()
                 self.redirect(rurl)
             else:
                 self.redirect('/')
 
-        self.render(template = '/common/blank')
+        self.render('blank')
 
 
     def twitter_request(self, path, access_token, callback = None,
