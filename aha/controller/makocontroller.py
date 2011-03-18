@@ -101,6 +101,8 @@ class MakoTemplateController(BaseController):
         hdrs = {}
 
         content_type = 'text/html; charset = %s' % self._charset
+        content_path = ''
+        content = ''
         
         if html:
             content = (''.join(html)).decode('utf-8')
