@@ -84,6 +84,20 @@ class CustomHandler(CGIHandler):
 class MainHandler(RequestHandler):
     """Handles all requests
     """
+    def __init__(self):
+        """
+        A initialization function.
+        You can set config.dispatcher parameter to use custom dispatcher.
+        In case it is None, it uses default aha.dispatch.dispatcher.
+        """
+        super(MainHandler, self).__init__(self)
+        from aha import Config
+        config = Config()
+        if hasattr(config, 'dispatcher'):
+            self.dispatcher = config.dispatcher;
+        else:
+            self.dispatcher = dispatcher;
+
     def get(self, *args):
         self.__process_request()
 
@@ -107,7 +121,7 @@ class MainHandler(RequestHandler):
 
     def __process_request(self):
         """dispatch the request"""
-        dispatcher.dispatch(self)
+        self.dispatcher.dispatch(self)
 
     def handle_exception(self, exception, debug_mode):
         from aha import Config
