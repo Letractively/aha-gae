@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: aha.plugin.microne
+Version: 0.6bdev
+Summary: A microframework plugin for aha
+Home-page: http://coreblog.org/aha
+Author: Atsushi Shibata
+Author-email: shibata@webcore.co.jp
+License: BSD
+Description: A plugin that makes aha framework working as microframework.
+Keywords: web aha plugin microframework
+Platform: UNKNOWN
