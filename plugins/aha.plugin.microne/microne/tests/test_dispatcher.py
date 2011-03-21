@@ -35,7 +35,7 @@ class TestDispatchers(TestCase):
         foo = lambda x: x*2
         bar = lambda id: id*2
 
-        app = App('foo')
+        app = Microne('foo')
 
         app.route('/foo_url')(foo)
         app.route('/bar_url/{id}')(bar)

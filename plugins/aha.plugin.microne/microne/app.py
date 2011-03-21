@@ -15,11 +15,11 @@ __author__  = 'Atsushi Shibata <shibata@webcore.co.jp>'
 __docformat__ = 'plaintext'
 __licence__ = 'BSD'
 
-__all__ = ['App']
+__all__ = ['Microne']
 
 import logging
 
-class App(object):
+class Microne(object):
 
     # class attributes.
     config = None
@@ -156,5 +156,7 @@ class App(object):
         if not cls.config:
             import aha
             cls.config = aha.Config()
+
+
 
 

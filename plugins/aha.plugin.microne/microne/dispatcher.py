@@ -28,7 +28,7 @@ def dispatch(hnd):
     A function to dispatch request to appropriate handler function
     """
     from aha.dispatch.router import get_router
-    from app import App
+    from app import Microne
     # resolve the URL
     url = hnd.request.path
     r = get_router()
@@ -38,14 +38,14 @@ def dispatch(hnd):
         func = route['controller']
         args, varargs, varkw, defaults = getargspec(func)
         # set request and response objects.
-        App.set_handler(hnd)
-        App.get_controller()
+        Microne.set_handler(hnd)
+        Microne.get_controller()
         if len(args) == 1:
             route['controller'](hnd)
         else:
             route['controller']()
-        App.controller.put_cookies()
-        App.clear_controller()
+        Microne.controller.put_cookies()
+        Microne.clear_controller()
 
     else:
         # No route for given url found.

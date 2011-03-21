@@ -53,25 +53,25 @@ class TestDispatchers(TestCase):
         dummy_hnd.response = 'response'
 
         # clear App.hnd
-        App.hnd = None
+        Microne.hnd = None
 
-        app = App('route and render html test')
-        # Calling App.get_hander() without set hander causes ValueError.
-        assert_raises(ValueError, App.get_handler)
+        app = Microne('route and render html test')
+        # Calling Microne.get_hander() without set hander causes ValueError.
+        assert_raises(ValueError, Microne.get_handler)
 
         # set dummy handler
-        App.set_handler(dummy_hnd)
+        Microne.set_handler(dummy_hnd)
 
         # check if correct handler is returned.
-        assert_equal(App.get_handler(), dummy_hnd)
-        assert_equal(App.request, 'request')
-        assert_equal(App.response, 'response')
+        assert_equal(Microne.get_handler(), dummy_hnd)
+        assert_equal(Microne.request, 'request')
+        assert_equal(Microne.response, 'response')
 
 
     def test_route_renderhtml(self):
         # make a new router
         rebuild_router()
-        app = App('route and render html test')
+        app = Microne('route and render html test')
 
         @app.route('/url')
         def url():
@@ -90,7 +90,7 @@ class TestDispatchers(TestCase):
     def test_authenticate(self):
         # make a new router
         rebuild_router()
-        app = App('authenticate test')
+        app = Microne('authenticate test')
         from aha.auth.appengine import AppEngineAuth
         app.config.auth_obj = AppEngineAuth
 
