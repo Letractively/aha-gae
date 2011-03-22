@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.6b'
+version = '0.61b'
 
 setup(name='aha.plugin.microne',
       version=version,
