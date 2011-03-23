@@ -1,4 +1,15 @@
 # -*- coding: utf-8 -*-
+#
+# config.py : A module for configuration function.
+# Special configuration for aha.plugin.microne
+#
+# Copyright 2011 Atsushi Shibata
+# $Id: dispatcher.py 653 2010-08-23 02:00:58Z ats $
+
+
+__author__  = 'Atsushi Shibata <shibata@webcore.co.jp>'
+__docformat__ = 'plaintext'
+__licence__ = 'BSD'
 
 import logging
 import os
