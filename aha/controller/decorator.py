@@ -3,13 +3,14 @@
 ##############################################################################
 #
 # decorators.py
-# A bunch of functions that work as decorators for controller methods
+# A bunch of functions that work as decorators for controller methods.
 #
 # Copyright (c) 2010 Webcore Corp. All Rights Reserved.
 #
 ##############################################################################
-""" decorators.py - A bunch of functions that work as decorators
-                             for controller methods.
+"""\
+decorators.py - A bunch of functions that work as decorators
+for controller methods.
 
 $Id: decorators.py 652 2010-08-23 01:58:52Z ats $
 """
@@ -31,7 +32,7 @@ config = aha.Config()
 class authenticate(object):
     """
     A decorator that catch method access, check authentication, 
-        redirect is authentication needs.
+    redirect is authentication needs.
     You may decorate handler methods in controllers like this:
     
     @authenticate()
@@ -64,6 +65,11 @@ class authenticate(object):
 
 
     def __call__(self, func, *args, **kws):
+        """
+        A method that actually called as a decorator.
+        It returns wrapped function(execute) so that the function
+        works every time parent function is called.
+        """
         self.func = func
         def execute(me):
             try:
@@ -91,8 +97,8 @@ class authenticate(object):
 
 def expose(func):
     """
-    A decorator function to let a method/function show via url invokation,
-         used to avoid method exposure.
+    A decorator function to let a method/function show via URL invokation,
+    used to avoid method exposure.
     """
     func._exposed_ = True
     return func
@@ -108,17 +114,17 @@ class cache(object):
     A decorator to cache response.
     You can control decorate function by giving arguments.
     
-    expire         : is used to specify expiration time by giving seconds.
+    :param expire: used to specify expiration time by giving seconds.
 
     You can set special class namespace to control namespace of the cache.
     Or you can also use set_namespace_func() classmethod to set it
-         outside of the class.
+    outside of the class.
 
-    namespace_func : is used to set hook function, 
-                        which returns namespace for memcache sotre.
-                     The hook function is called along with request object.
-                     You can use the hook function to return different response
-                        seeing language, user agent etc. in header.
+    :param namespace_func: used to set hook function, 
+    which returns namespace for memcache sotre.
+    The hook function is called along with request object.
+    You can use the hook function to return different response
+    seeing language, user agent etc. in header.
 
 
     """
@@ -155,6 +161,13 @@ class cache(object):
     def set_namespace_func(cls, func):
         """
         A classmethod to set namespace function.
+        The namespace function returns short string working as a namespace
+        for memcache.
+        You can use it to store different cache according to environment
+        variable in request.
+        For example, if you want to respond to requests from smartphones
+        in different output, you may check user agent in requests
+        and returns special namespace for these requests.
         """
         cls.namespace_func = staticmethod(func)
 
