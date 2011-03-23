@@ -24,13 +24,18 @@ from plugin.twitteroauth.twitter_auth import (TwitterOAuth, TWITTER_NAMESPACE,
 
 class TwitteroauthController(MakoTemplateController):
     """
-    A controller to set parameters in cookie sent from twitter
+    A controller to set parameters in cookie sent from twitter.
+    It works after redirection from twitter's site
+    after user pushes allow button.
+    It receives authentication id in get parameter, 
+    obtain user information at index() method
+    and set informations of user to memcache.
     """
 
 
     def __init__(self, hnd, params = {}):
         """
-        Initialize method
+        An initialize method.
         """
         super(TwitteroauthController, self).__init__(hnd, params)
         self.auth_obj = None
@@ -39,6 +44,11 @@ class TwitteroauthController(MakoTemplateController):
 
     @expose
     def index(self):
+        """
+        A method to receive redirection from twitter's site.
+        Twitter gives token to an application by using 
+        oauth_token get parameter.
+        """
         token = self.params.get('oauth_token')
         self.auth_obj = TwitterOAuth()
         self.auth_obj.request = self.request
@@ -49,7 +59,12 @@ class TwitteroauthController(MakoTemplateController):
     def _post_action(self, user):
         """
         A method to put twitter user information to memcache
-            and redirect to original page
+        and redirect to original page.
+        It is called via callback set to get_authenticated_user() method.
+        The method obtain user information from twitter, pass it to this
+        method. This method stores the information to memcache.
+        
+        :param user : user information of twitter.
         """
         if user:
             d = {'type':TwitterOAuth.TYPE,
