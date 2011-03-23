@@ -7,7 +7,6 @@ log = logging.getLogger(__name__)
 from nose.tools import *
 from google.appengine.api import apiproxy_stub_map
 from google.appengine.api.memcache import memcache_stub
-from google.appengine.api import urlfetch_stub
 
 from aha.wsgi.appinit import get_app
 from aha.dispatch.router import rebuild_router
@@ -24,9 +23,6 @@ class TestDispatchers(TestCase):
         if not apiproxy_stub_map.apiproxy.GetStub('memcache'):
             apiproxy_stub_map.apiproxy.RegisterStub( \
                 'memcache', memcache_stub.MemcacheServiceStub())
-        if not apiproxy_stub_map.apiproxy.GetStub('urlfetch'):
-            apiproxy_stub_map.apiproxy.RegisterStub( \
-                'urlfetch', urlfetch_stub.URLFetchServiceStub())
 
     def test_route(self):
         # make a new router

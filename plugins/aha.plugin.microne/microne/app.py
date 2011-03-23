@@ -19,6 +19,7 @@ the web application framework `aha <http://coreblog.org/aha>`_.
 import logging
 from django.template import Context
 
+
 class Microne(object):
     """\
     The class Microne contains many access points to the resources, 

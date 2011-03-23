@@ -8,7 +8,6 @@ from nose.tools import *
 from google.appengine.api import apiproxy_stub_map
 from google.appengine.api.memcache import memcache_stub
 from google.appengine.api import user_service_stub
-from google.appengine.api import urlfetch_stub
 
 from aha.wsgi.appinit import get_app
 from aha.dispatch.router import rebuild_router
@@ -31,9 +30,6 @@ class TestDispatchers(TestCase):
         if not apiproxy_stub_map.apiproxy.GetStub('user'):
             apiproxy_stub_map.apiproxy.RegisterStub(
                                  'user', user_service_stub.UserServiceStub())
-        if not apiproxy_stub_map.apiproxy.GetStub('urlfetch'):
-            apiproxy_stub_map.apiproxy.RegisterStub( \
-                'urlfetch', urlfetch_stub.URLFetchServiceStub())
 
             os.environ['AUTH_DOMAIN'] = AUTH_DOMAIN
             os.environ['USER_EMAIL'] = LOGGED_IN_USER
@@ -60,7 +56,7 @@ class TestDispatchers(TestCase):
         assert_raises(ValueError, Microne.get_handler)
 
         # set dummy handler
-        Microne.set_handler(dummy_hnd)
+        Microne.set_handler(dummy_hnd, dummy_hnd)
 
         # check if correct handler is returned.
         assert_equal(Microne.get_handler(), dummy_hnd)
@@ -108,4 +104,18 @@ class TestDispatchers(TestCase):
         resp = self.app.get('/auth_url')
         # request with valid USER_EMAIL returns correct output.
         assert_equal(resp.body, 'foo')
+
+    def test_render_with_context(self):
+        rebuild_router()
+        app = Microne('route and render html test')
+
+        @app.route('/context')
+        def context():
+            app.context['hoge'] = 'hoge'
+            app.render('foo ${hoge}')
+
+        resp = self.app.get('/context')
+        # request without USER_EMAIL causes redirection.
+        assert_equal(resp.body, 'foo hoge')
+
 
