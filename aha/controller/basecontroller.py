@@ -34,8 +34,9 @@ from aha.controller.decorator import cache
 
 
 class BaseController(object):
-    """The BaseController is the base class of action controllers.
-        Action controller handles the requests from clients.
+    """
+    The BaseController is the base class of action controllers.
+    Action controller handles the requests from clients.
     """
     _template_ext = '.html'
 
@@ -43,9 +44,8 @@ class BaseController(object):
         """
         An initialization method. It sets some attributes for combenience.
         
-        Arguments:
-        hnd     : a request object.
-        params  : parameters given via dispacher.
+        :param hnd     : a request object.
+        :param params  : parameters given via dispacher.
         """
         self.hnd = hnd                  # hander itsrlf
         self.controller = self          # controller object
@@ -124,32 +124,31 @@ class BaseController(object):
 
     def from_json(self, json):
         """
-        Convert a JSON string to python object
+        Convert a JSON string to python object.
         """
         from django.utils import simplejson
         return simplejson.loads(json)
 
     def to_json(self, obj):
         """
-        Convert a dict/list to JSON. Use simplejson
+        Convert a dict/list to JSON. Use simplejson.
         """
         from django.utils import simplejson
         return simplejson.dumps(obj)
 
     def parse_opt(self, encode = 'utf-8', **opt):
         """
-        A method to parse from the 'opt' argument and get a template.
+        A method to parse the 'opt' argument and get a template.
         It gets options as a keyword argument and parse them.
         
-        Expected arguments:
-        encode      : encode for the output.
-        expires     : expire date as a string.
-        html        : raw html for the output.
-        text        : raw text for the output.
-        json        : raw json for the output.
-        xml         : raw xml for the output.
-        script      : raw java script for the output.
-        template    : path to the template file.
+        :param template    : path to the template file.
+        :param html        : raw html for the output.
+        :param text        : raw text for the output.
+        :param json        : raw json for the output.
+        :param xml         : raw xml for the output.
+        :param script      : raw java script for the output.
+        :param encode      : encode for the output.
+        :param expires     : expire date as a string.
         """
         content = ''
         template_path = ''
@@ -178,9 +177,11 @@ class BaseController(object):
 
     def check_memcache(self):
         """
-        A method to check if page is cached in memcache.
-        It fill output by using memcache and returns true if cache exists,
-             return false if not.
+        A method to check if page is cached in memcache
+        seeing the URL in request.
+        It fill output by using memcache and returns true
+        in case a cache to the URL path exists,
+        return false if not.
         """
         namespace = ''
         if cache.namespace_func:
@@ -202,19 +203,24 @@ class BaseController(object):
     def render(self, *html, **opt):
         """
         A method to render output.
-        It gets arguments to control rendering result.
-        It receives template string as non keyword argument, and
-                following arguments.
+        In BaseController, it uses App Engine's default Django template.
+        You may override this method when you make your own controller class
+        that uses other template engine.
 
-        Expected arguments:
-        encode      : encode for the output.
-        expires     : expire date as a string.
-        html        : raw html for the output.
-        text        : raw text for the output.
-        json        : raw json for the output.
-        xml         : raw xml for the output.
-        script      : raw java script for the output.
-        template    : path to the template file.
+        It receives template string as non keyword argument, and
+        following arguments.
+
+        :param template    : path to the template file.
+        :param html        : raw html for the output.
+        :param text        : raw text for the output.
+        :param json        : raw json for the output.
+        :param xml         : raw xml for the output.
+        :param script      : raw java script for the output.
+        :param encode      : encode for the output.
+        :param expires     : expire date as a string.
+        :param context     : the context dictionaly passed to template.
+        In case this argument doesn't exist, controller object will be used
+        as the context.
         """
 
         # try to check the page is cached or not.
@@ -230,7 +236,7 @@ class BaseController(object):
             template_path = ''
         elif opt:
             content, template_path, content_type = self.parse_opt(**opt)
-        context = self.__dict__
+        context = opt.get('context', self.__dict__)
         if isinstance(opt.get('values'), dict):
             context.update(opt.get('values'))
         # render content as a template
@@ -258,7 +264,8 @@ class BaseController(object):
     def put_cookies(self):
         """
         A method to put cookies to the response,
-             called after render(), redirect() etc.
+        called in dispatch function,
+        or after render(), redirect() or called  etc.
         """
         if self.post_cookie.keys():
             c = self.post_cookie
@@ -268,6 +275,8 @@ class BaseController(object):
     def redirect(self, url, perm = False):
         """
         A method to redirect response.
+        
+        :param url: the URL to redirect.
         """
         self.has_redirected = True 
         self.has_rendered = True 

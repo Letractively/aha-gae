@@ -39,7 +39,7 @@ charset = 'utf-8'
 
 def get_lookup(du = False):
     """
-    A function to obtain global template lookup
+    A function to obtain global template lookup.
     """
     global tlookup
     if not tlookup:
@@ -58,10 +58,16 @@ def get_lookup(du = False):
                  output_encoding = charset,
                  filesystem_checks = False, cache_type = 'memcached',
                  cache_dir = ".", cache_url = 'memcached://')
-        logging.debug('new TemplateLookup is loaded.')
+        logging.debug('loading new TemplateLookup.')
 
 
 class MakoTemplateController(BaseController):
+    """
+    The controller class for aha that handles mako
+    as a template engine.
+    You may make derived class if you want to use mako template
+    in your controller.
+    """
 
     _template_ext = '.html'
     _charset = 'utf-8'
@@ -83,17 +89,19 @@ class MakoTemplateController(BaseController):
         A method to render output by using mako template.
         It gets arguments to control rendering result.
         It receives template string as non keyword argument, and
-                following arguments.
+        following arguments.
 
-        Expected arguments:
-        encode      : encode for the output.
-        expires     : expire date as a string.
-        html        : raw html for the output.
-        text        : raw text for the output.
-        json        : raw json for the output.
-        xml         : raw xml for the output.
-        script      : raw java script for the output.
-        template    : path to the template file.
+        :param template    : path to the template file.
+        :param html        : raw html for the output.
+        :param text        : raw text for the output.
+        :param json        : raw json for the output.
+        :param xml         : raw xml for the output.
+        :param script      : raw java script for the output.
+        :param encode      : encode for the output.
+        :param expires     : expire date as a string.
+        :param context     : the context dictionaly passed to template.
+        In case this argument doesn't exist, controller object will be used
+        as the context.
         """
         # try to check the page is cached or not.
         if self.check_memcache():
@@ -113,7 +121,7 @@ class MakoTemplateController(BaseController):
         else:
             raise Exception('Render type error')
 
-        context = self.__dict__
+        context = opt.get('context', self.__dict__)
         if isinstance(opt.get('values'), dict):
             context.update(opt.get('values'))
         # render content as a template
