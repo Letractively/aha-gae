@@ -23,13 +23,29 @@ from aha.auth.base import BaseAuth
 from urlparse import urlsplit
 
 class AppEngineAuth(BaseAuth):
+    """
+    The authentication plugin class for App Engine native Google authentication.
+    which is derived from BaseAuth.
+    You may set class object to config object to use it.
+    Write following code to config.py.::
+    
+        from aha.auth.appengine import AppEngineAuth
+        config.auth_obj = AppEngineAuth
+    
+    """
+
     TYPE = 'appenginegoogle'
 
     def auth(self, ins, *param, **kws):
         """
         A method to perform authentication, or
-            to check if the authentication has been performed.
+        to check if the authentication has been performed.
         It returns true on success, false on failure.
+
+        :param ins: The controller instance.
+        :param param: parameter to the authentication function.
+        :param kws: keyword argument to the authentication function.
+
         """
         u = users.get_current_user()
         if not u:
@@ -40,7 +56,12 @@ class AppEngineAuth(BaseAuth):
     def auth_redirect(self, ins, *param, **kws):
         """
         A method to perform redirection
-            when the authentication fails, user doesn't have privileges, etc.
+        when the authentication fails, user doesn't have privileges, etc.
+        It redirects access to the URL that App Engine's User service gives.
+
+        :param ins: The controller instance.
+        :param param: parameter to the authentication function.
+        :param kws: keyword argument to the authentication function.
         """
         #path = urlsplit(ins.request.url)[2]
         #me.session['referer'] = config.site_root+path
@@ -52,7 +73,12 @@ class AppEngineAuth(BaseAuth):
         """
         A method to return current login user.
         It returns user dict if the user is logging in,
-            None if doesn't.
+        None if doesn't.
+        It gets user information via App Engine's User service.
+
+        :param ins: The controller instance.
+        :param param: parameter to the authentication function.
+        :param kws: keyword argument to the authentication function.
         """
         u = users.get_current_user()
         if u:
@@ -64,6 +90,20 @@ class AppEngineAuth(BaseAuth):
                     }
         else:
             return {}
+
+
+    def logout(self, ins, *param, **kws):
+        """
+        A method to perform logout action.
+        Typically it's called from authenticate decorator.
+        It redirects to the logout URL that App Engine's User service gives.
+
+        :param ins: The controller instance.
+        :param param: parameter to the authentication function.
+        :param kws: keyword argument to the authentication function.
+        """
+        dest_url = ins.request.referer
+        ins.redirect(create_logout_url(dest_url))
 
 
 def main(): pass;
