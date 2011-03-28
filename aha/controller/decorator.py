@@ -143,6 +143,22 @@ class cache(object):
         import os
         self.func = func
         def execute(me):
+            p = urlsplit(me.request.url)[2]
+            namespace = ''
+            if self.namespace_func:
+                namespace = self.namespace_func(me.request)
+            c = memcache.get(p, namespace = namespace)
+            if c:
+                # in case a given url has cached, we use it to make a response.
+                resp = me.response
+                r = me.response.out
+                r.write(c['body'])
+                for k, i in c['hdr'].items():
+                    resp.headers[k] = i
+                me.has_rendered = True
+                me.cached = True
+                return
+
             r = self.func(me, *args, **kws)
             if self.expire == 0:
                 return
@@ -150,10 +166,6 @@ class cache(object):
             out = resp.out
             out.seek(0)
             try:
-                p = urlsplit(me.request.url)[2]
-                namespace = ''
-                if self.namespace_func:
-                    namespace = self.namespace_func(me.request)
                 memcache.set(p, {'hdr':resp.headers,'body':out.read()},
                              self.expire, namespace = namespace)
                 logging.debug('%s is cahed' % p)

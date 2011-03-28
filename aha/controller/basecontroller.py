@@ -175,31 +175,6 @@ class BaseController(object):
             template_path = os.path.join(self._controller, tpname)
         return content, template_path, content_type
 
-    def check_memcache(self):
-        """
-        A method to check if page is cached in memcache
-        seeing the URL in request.
-        It fill output by using memcache and returns true
-        in case a cache to the URL path exists,
-        return false if not.
-        """
-        namespace = ''
-        if cache.namespace_func:
-            namespace = cache.namespace_func(self.request)
-        p = urlsplit(self.request.url)[2]
-        c = memcache.get(p, namespace = namespace)
-        if c:
-            # in case a given url has cached, we use it to make a response.
-            resp = self.response
-            r = self.response.out
-            r.write(c['body'])
-            for k, i in c['hdr'].items():
-                resp.headers[k] = i
-            self.has_rendered = True
-            self.cached = True
-            return True
-        return False
-
     def render(self, *html, **opt):
         """
         A method to render output.
@@ -222,10 +197,6 @@ class BaseController(object):
         In case this argument doesn't exist, controller object will be used
         as the context.
         """
-
-        # try to check the page is cached or not.
-        if self.check_memcache():
-            return
 
         hdrs = {}
 
