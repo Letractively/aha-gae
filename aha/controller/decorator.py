@@ -33,11 +33,11 @@ class authenticate(object):
     """
     A decorator that catch method access, check authentication, 
     redirect is authentication needs.
-    You may decorate handler methods in controllers like this:
+    You may decorate handler methods in controllers like this::
     
-    @authenticate()
-    def some_funk(self):
-        # your code here...
+        @authenticate()
+        def some_funk(self):
+            # your code here...
     
     """
     def __init__(self, check_func = None, auth_obj = None, *args, **kws):
@@ -45,11 +45,11 @@ class authenticate(object):
         An initialization method of decorator.
         The auth_obj argument is a object to perform authentication function.
         If auth_obj is given, __call__() uses it instead of
-                one in config object.
+        one in config object.
         Otherwise, it uses default authentication given in config object.
         The check_funk argument is a hook method called after authentication.
         If chack_funk is given, __call__() method calls it
-                after authentication.
+        after authentication.
         
         """
         self.args = args
@@ -99,6 +99,12 @@ def expose(func):
     """
     A decorator function to let a method/function show via URL invokation,
     used to avoid method exposure.
+    You have to decorate method you want it to receive request from http
+    like following ::
+
+        @expose
+        def some_method(self):
+            # some code...
     """
     func._exposed_ = True
     return func
@@ -121,7 +127,7 @@ class cache(object):
     outside of the class.
 
     :param namespace_func: used to set hook function, 
-    which returns namespace for memcache sotre.
+    which returns namespace string for memcache sotre.
     The hook function is called along with request object.
     You can use the hook function to return different response
     seeing language, user agent etc. in header.
@@ -149,7 +155,7 @@ class cache(object):
                 if self.namespace_func:
                     namespace = self.namespace_func(me.request)
                 memcache.set(p, {'hdr':resp.headers,'body':out.read()},
-                             self.expire, namespace=namespace)
+                             self.expire, namespace = namespace)
                 logging.debug('%s is cahed' % p)
             except:
                 memcache.flush_all()
