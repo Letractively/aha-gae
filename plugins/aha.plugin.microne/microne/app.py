@@ -17,16 +17,17 @@ the web application framework `aha <http://coreblog.org/aha>`_.
 """
 
 import logging
+from urlparse import urlsplit
 from django.template import Context
 
 
 class Microne(object):
     """\
     The class Microne contains many access points to the resources, 
-    which reads such as request/response object etc.
+    which leads such as request/response object etc.
     It also has decorators as a method. They can be used to connect path to 
-    funtions, wrap authentication to functions, etc.
-    Typically your application forms module - single python source code file.
+    funtions, wrap authentication for functions, etc.
+    Typically you make application as a module - single python source code file.
     In the application, you may use Microne class like following. ::
     
         from plugins.microne.app import Microne
@@ -39,7 +40,7 @@ class Microne(object):
         def foo():
             app.render('Welcome to my first application !')
     
-    You also see app instance in the function. It has some method used to make
+    You can also use app instance in the function. It has some method used to make
     response etc.
     
     app object also has request object. When you want to get parameter from URL, 
@@ -49,6 +50,19 @@ class Microne(object):
         def foo():
             the_id = request.params.get('id', '')
             app.render('The id is %s' % the_id )
+
+    app instance has several attributes that you can use in your web application::
+
+    :request:   A WebOb.request object. You can get many data such as
+    request headers, POST/GET data, URL, etc. from this attribute
+    :response:  A WebOb.response object. You can pass informations
+    by adding header and so on.
+    :params:    Parameters that routes returns. In case you set route '/url/{id}'
+    by using @app.route(), and the URL is '/url/foo',
+    you will get string 'foo' by giving 'app.params.get('id') in your code.
+    :context:   The context object that is passed to app.render().
+    :config:    The config object of Aha, which has many global configulation
+    information.
     """
 
     # class attributes.
@@ -67,8 +81,14 @@ class Microne(object):
         :param app_id: The ID of the application. Just pass __file__
         if you don't care about it.
         """
+        # getting config object.
         self.get_config()
         self.app_id = app_id
+        # a dictionary to store expires and namespace functions
+        # for each decorated function,
+        #    setting function object as a key to the dictionary.
+        self.cache_expires = {}
+        self.cache_nsfuncs = {}
 
 
     def route(self, path, **params):
@@ -98,7 +118,7 @@ class Microne(object):
         def decorate(func, *args, **kws):
             """
             A function returned as a object in load time,
-                which set route to given url along with decorated function.
+            which set route to given url along with decorated function.
             """
             from aha.dispatch.router import get_router
             r = get_router()
@@ -150,6 +170,77 @@ class Microne(object):
         cnt.render(*html, **opt)
 
 
+    def cache(self, expire = 0, namespace_func = None):
+        """
+        A method used to cache outputs of the decorated function.
+        It caches the output of the decorated function.
+        Usage::
+        
+            @app.cache(expire = 600):  # expires in 10 minutes
+            def foo():
+                app.render('The output')
+
+        It has some arguments to control caches::
+        :param expire: the expiration time for cache in seconds.
+        :param namespace_func: used to set hook function, 
+        which returns namespace string for memcache sotre.
+        The hook function is called along with request object.
+        You can use the hook function to return different response
+        seeing language, user agent etc. in header.
+        """
+        from google.appengine.api import memcache
+        
+        def decorate(func, *args, **kws):
+            """
+            A function returned as a object in load time,
+            which returns inner function do_decorate().
+            """
+            # setting cache expires for given decorated function,
+            #  if argument 'expire' is given.
+            if expire:
+                self.cache_expires[func] = expire
+            else:
+                self.cache_expires[func] = self.get_config().page_cache_expire
+            if namespace_func:
+                self.cache_nsfuncs[func] = namespace_func
+
+            def do_cache(*args, **kws):
+                """
+                A function works every time decorated functions are called.
+                """
+                resp = self.response
+                out = resp.out
+                namespace = ''
+                if self.cache_nsfuncs.get(func, None):
+                    namespace = self.cache_nsfuncs[func](self.request)
+                p = urlsplit(self.request.url)[2]
+                c = memcache.get(p, namespace)
+                if c:
+                    # in case cache is found, use it 
+                    #           instead of rendering by calling function.
+                    out.write(c['body'])
+                    for k, i in c['hdr'].items():
+                        resp.headers[k] = i
+                    return
+
+                r = func(*args, **kws)
+                expire = self.cache_expires.get(func, 0)
+                if expire == 0:
+                    return
+                out.seek(0)
+                try:
+                    p = urlsplit(self.request.url)[2]
+                    memcache.set(p, {'hdr':resp.headers,'body':out.read()},
+                                 expire, namespace=namespace)
+                    logging.debug('%s is cahed' % p)
+                except:
+                    memcache.flush_all()
+                    logging.debug('memcache is flashed.')
+            return do_cache
+
+        return decorate
+
+
     def authenticate(self):
         """
         A method used to wrap function with authentication.
@@ -168,7 +259,7 @@ class Microne(object):
         def decorate(func, *args, **kws):
             """
             A function returned as a object in load time,
-                which returns inner function do_decorate().
+            which returns inner function do_decorate().
             """
             def do_authenticate():
                 """
@@ -246,11 +337,14 @@ class Microne(object):
     @classmethod
     def get_config(cls):
         """
-        A method to attach config object to class object. It is used internally 
+        A method to attach config object to class object and returns it.
+        Typicalli it is used internally.
         """
         if not cls.config:
             import aha
             cls.config = aha.Config()
+        return cls.config
+
 
 
 
