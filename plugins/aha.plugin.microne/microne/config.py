@@ -44,6 +44,7 @@ def initConfig(basedir):
     from aha.controller import makocontroller
     makocontroller.get_lookup()
     config.template_lookup = makocontroller.tlookup
+    config.error_template = ''
 
     config.page_cache_expire = 60*60*4 # 8 hours
     config.query_cache_expire = 60*60*2 # 2 hours
