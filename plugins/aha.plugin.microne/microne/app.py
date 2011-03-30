@@ -51,6 +51,11 @@ class Microne(object):
             the_id = request.params.get('id', '')
             app.render('The id is %s' % the_id )
 
+    The constructor has few arguments.
+
+    :param app_id: The ID of the application. Just pass __file__
+    if you don't care about it.
+
     app instance has several attributes that you can use in your web application::
 
     :request:   A WebOb.request object. You can get many data such as
@@ -61,6 +66,7 @@ class Microne(object):
     by using @app.route(), and the URL is '/url/foo',
     you will get string 'foo' by giving 'app.params.get('id') in your code.
     :context:   The context object that is passed to app.render().
+    :session:   The volatile session object.
     :config:    The config object of Aha, which has many global configulation
     information.
     """
@@ -77,9 +83,6 @@ class Microne(object):
     def __init__(self, app_id):
         """
         A constructor for App instance.
-        
-        :param app_id: The ID of the application. Just pass __file__
-        if you don't care about it.
         """
         # getting config object.
         self.get_config()
@@ -115,15 +118,14 @@ class Microne(object):
 
         """
 
-        def decorate(func, *args, **kws):
+        def decorate(func):
             """
             A function returned as a object in load time,
             which set route to given url along with decorated function.
             """
             from aha.dispatch.router import get_router
             r = get_router()
-            argkeys = kws.keys()
-            r.connect(None, path, controller = func, **kws)
+            r.connect(None, path, controller = func, **params)
             return func
         
         return decorate
@@ -168,6 +170,26 @@ class Microne(object):
         opt['context'] = context.dicts[0]
         cnt = self.get_controller()
         cnt.render(*html, **opt)
+
+
+    def redirect(self, path):
+        """
+        A method to perform redirection.
+        
+        :param path: The path to redirect.
+        """
+        self.get_controller().redirect(path)
+
+
+    def error(self, code, message = ''):
+        """
+        A method to return error page.
+        
+        :param code: The http status code such as 404.
+        :param message: The message to show in error page.
+        """
+        self.response.set_status(404)
+        raise Exception(message)
 
 
     def cache(self, expire = 0, namespace_func = None):
@@ -298,6 +320,8 @@ class Microne(object):
         cls.request = hnd.request
         cls.response = hnd.response
         cls.params = route
+        if cls.context:
+            del cls.context
         cls.context = Context()
 
 
@@ -322,6 +346,7 @@ class Microne(object):
             raise Exception('A handler is to be set for getting contoller.')
         if not cls.controller:
             cls.controller = cls.config.controller_class(cls.hnd)
+            cls.session = cls.controller.session
         return cls.controller
 
 
