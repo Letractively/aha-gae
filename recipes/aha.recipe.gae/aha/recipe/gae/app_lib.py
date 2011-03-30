@@ -101,7 +101,11 @@ class Recipe(app_lib.Recipe):
                 continue
 
             if pkgname.startswith('aha.application'):
-                dst = os.path.join(app_dir)
+                if src.endswith('application'):
+                    dst = os.path.join(app_dir)
+                else:
+                    dst = os.path.split(app_dir)[0]
+                    dst = os.path.join(dst, os.path.split(src)[1])
             elif pkgname.startswith('aha.plugin'):
                 dst = os.path.join(plugin_dir, name)
             else:
