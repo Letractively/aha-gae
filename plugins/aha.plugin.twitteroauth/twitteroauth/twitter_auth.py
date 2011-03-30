@@ -80,16 +80,14 @@ class TwitterOAuth(BaseAuth, TwitterMixin):
         
         ins.redirect(url)
 
-
-    def get_user(self, ins, *param, **kws):
+    @classmethod
+    def get_user(cls, ins):
         """
         A method to return current login user.
         It returns user dict if the user is logging in,
         None if doesn't.
 
         :param ins      : a controller instance.
-        :param param    : parameters to be passed to authentication function.
-        :param kws      : keyword arguments to be passed to authentication
         funciton.
         """
         key = ins.cookies.get(OAUTH_ACCESS_TOKEN_COOKIE, '')
@@ -98,6 +96,18 @@ class TwitterOAuth(BaseAuth, TwitterMixin):
             if user: return user;
 
         return {}
+
+    @classmethod
+    def clear_user(cls, ins):
+        """
+        A method to clear current user in memcache.
+
+        :param ins      : a controller instance.
+        funciton.
+        """
+        key = ins.cookies.get(OAUTH_ACCESS_TOKEN_COOKIE, '')
+        if key:
+            memcache.delete(key, namespace = TWITTER_NAMESPACE)
 
 
     def set_cookie(self, key, data):
