@@ -70,7 +70,7 @@ class TwitteroauthController(MakoTemplateController):
             d = {'type':TwitterOAuth.TYPE,
                'nickname':user.get('username', ''),
                'email':'',
-               'userid':user.get('user_id', ''),
+               'userid':user.get('id', ''),
                'realname':user.get('name', ''),
                'icon_url':user.get('profile_image_url', ''),
                }
