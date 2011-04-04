@@ -120,8 +120,8 @@ class MakoTemplateController(BaseController):
             raise Exception('Render type error')
 
         context = opt.get('context', self.__dict__)
-        if isinstance(opt.get('values'), dict):
-            context.update(opt.get('values'))
+        if isinstance(opt.get('context'), dict):
+            context.update(opt.get('context'))
         # render content as a template
         if content_path:
             tmpl = tlookup.get_template(content_path)
