@@ -1,0 +1,65 @@
+## -*- coding: utf-8 -*-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+	<title>Microne Imageborad</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=320, initial-scale=1, maximum-scale=1, user-scalable=no" />
+	<link type="text/css" rel="stylesheet" media="screen" href="/asset/main.css">
+</head>
+<body>
+	<div class="user-info">
+	<ul>
+	% if user:
+	<li>
+	Logged in : <img src="${user.profile_image_url}" width="16" height="16" />
+		<a href="http://twitter.com/${user.username | u}" target="_blank">${user.name | h}</a>
+	</li>
+	<li>
+	<a href="/logout">Logout</a>
+	</li>
+	% else:
+		% if referer:
+		<li>
+			<a href="/login?ref=${referer}">Log in with Twitter Account</a>
+		</li>
+		% else:
+		<li>
+			<a href="/login">Log in with Twitter Account</a>
+		</li>
+		% endif
+	% endif
+	</ul>
+	</div>
+
+	<h1>Microne Imageborad</h1>
+	% if message:
+	<p>${message | h}</p>
+	% endif
+
+	% if images:
+		<dl>
+		% for img in images:
+			<dt>
+			<a href="http://twitter.com/${img.user.username}" target="_blank">
+				<img src="${img.user.profile_image_url}" width="48" height="48" title="${img.user.name | h}" />
+			</a>
+			</dt>
+			<dd>
+			<img src="/image/${img.key()}" />
+			<dd>
+			<br clear="all">
+		% endfor
+		</dl>
+	% endif
+
+	% if user:
+	<form action="/post" method="POST" enctype='multipart/form-data'>
+		<label for"img">Post a new image</label>
+		<input type="file" name="img" />
+		<input type="submit" name="submit" value="post"/>
+	</form>
+	% endif
+
+</body>
+</html>
