@@ -10,7 +10,7 @@
 ##############################################################################
 """ makocontroller.py - Classes handing mako as a template engine.
 
-$Id: makocontroller.py 644 2010-08-10 04:15:42Z ats $
+$Id: makocontroller.py 152 2011-05-24 22:47:04Z ats $
 """
 
 __author__  = 'Atsushi Shibata <shibata@webcore.co.jp>'
@@ -106,7 +106,7 @@ class MakoTemplateController(BaseController):
 
         hdrs = {}
 
-        content_type = 'text/html; charset = %s' % self._charset
+        content_type = 'text/html; charset=%s' % self._charset
         content_path = ''
         content = ''
         
@@ -123,17 +123,20 @@ class MakoTemplateController(BaseController):
         if isinstance(opt.get('context'), dict):
             context.update(opt.get('context'))
         # render content as a template
+        tmpl = None
         if content_path:
             tmpl = tlookup.get_template(content_path)
         elif content:
-            tmpl = template.Template(content)
+            result = content
+            #tmpl = template.Template(content)
             #context['path'] = path
 
-        try:
-            result = tmpl.render(**context)
-        except:
-            r = exceptions.html_error_template().render()
-            raise Exception(r)
+        if tmpl:
+            try:
+                result = tmpl.render(**context)
+            except:
+                r = exceptions.html_error_template().render()
+                raise Exception(r)
 
 
         hdrs['Content-Type'] = content_type
