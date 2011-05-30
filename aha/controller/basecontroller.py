@@ -11,7 +11,7 @@
 ##############################################################################
 """ basecontroller.py - Classes to handle CRUD form for a model.
 
-$Id: basecontroller.py 638 2010-08-10 04:05:57Z ats $
+$Id: basecontroller.py 186 2011-05-28 06:19:05Z ats $
 """
 
 __author__  = 'Atsushi Shibata <shibata@webcore.co.jp>'
@@ -152,23 +152,24 @@ class BaseController(object):
         """
         content = ''
         template_path = ''
-        content_type = 'text/html; charset = %s' % encode
+        content_type = 'text/html; charset=%s' % encode
         if opt.has_key('expires'):
             hdrs['Expires'] = opt.get('expires')
             
         if opt.has_key('html'):
             content = opt.get('html').decode('utf-8')
         elif opt.has_key('text'):
-            content_type = 'text/plain; charset = %s' % encode
+            content_type = 'text/plain; charset=%s' % encode
             content = opt.get('text')
         elif opt.has_key('json'):
-            content_type = 'application/json; charset = %s' % encode
-            content = opt.get('json')
+            #content_type = 'text/plain; charset=%s' % encode
+            content_type = 'text/javascript; charset=%s' % encode
+            content = self.to_json(opt.get('json'))
         elif opt.has_key('xml'):
-            content_type = 'text/xml; charset = %s' % encode
+            content_type = 'text/xml; charset=%s' % encode
             content = opt.get('xml')
         elif opt.has_key('script'):
-            content_type = 'text/javascript; charset = %s' % encode
+            content_type = 'text/javascript; charset=%s' % encode
             content = opt.get('script')
         elif opt.has_key('template'):
             tpname = opt.get('template')+self._template_ext
@@ -200,7 +201,7 @@ class BaseController(object):
 
         hdrs = {}
 
-        content_type = 'text/html; charset = utf-8'
+        content_type = 'text/html; charset=utf-8'
         if html:
             content = u''.join(html)
             content_path = ''
