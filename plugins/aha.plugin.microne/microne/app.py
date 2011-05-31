@@ -18,12 +18,14 @@ the web application framework `aha <http://coreblog.org/aha>`_.
 
 import logging
 from urlparse import urlsplit
+from base64 import b64decode
+
 from django.template import Context
 
 
 class Microne(object):
     """\
-    The class Microne contains many access points to the resources, 
+    The class Microne contains access points to the resources, 
     which leads such as request/response object etc.
     It also has decorators as a method. They can be used to connect path to 
     funtions, wrap authentication for functions, etc.
@@ -66,7 +68,9 @@ class Microne(object):
     by using @app.route(), and the URL is '/url/foo',
     you will get string 'foo' by giving 'app.params.get('id') in your code.
     :context:   The context object that is passed to app.render().
-    :session:   The volatile session object.
+    :session:   The volatile session object. You can use session object
+    the same way as dictionary. Don't forget to call session.put()
+    to store session data.
     :config:    The config object of Aha, which has many global configulation
     information.
     """
@@ -162,10 +166,10 @@ class Microne(object):
 
         """
         context = self.context
+        # add request, response to context implicitly.
+        context['request'] = self.request
+        context['response'] = self.response
         if 'context' in opt:
-            # add request, response to context implicitly.
-            opt['context']['request'] = self.request
-            opt['context']['response'] = self.response
             context.update(opt['context'])
         opt['context'] = context.dicts[0]
         cnt = self.get_controller()
@@ -274,7 +278,7 @@ class Microne(object):
                 app.render('The output.')
 
         Note::
-            app.route() must be come first.
+            app.route() must come first.
 
         """
 
@@ -288,13 +292,14 @@ class Microne(object):
                 A function to perform authentication
                     every time decorated function is called.
                 """
-                try:
-                    if 'referer' not in me.session:
-                        path = urlsplit(me.request.url)[2]
-                        me.session['referer'] = self.config.site_root+path
-                        me.session.put()
-                except:
-                    pass
+                #try:
+                if 1:
+                    if 'referer' not in self.session:
+                        path = urlsplit(self.request.url)[2]
+                        self.session['referer'] = path
+                        self.session.put()
+                #except:
+                #    pass
                 aobj = self.config.auth_obj()
                 self.get_controller()
                 auth_res = aobj.auth(self.controller, *args, **kws)
@@ -306,6 +311,71 @@ class Microne(object):
             return do_authenticate
 
         return decorate
+
+    def basicauth(self, user = None, password = None, realm = None):
+        """
+        A method used to wrap function with BASIC authentication.
+        Usage::
+
+            @app.route('/foo2')
+            @app.basicauth(user = 'usr', password = 'pass', realm = 'Auth')
+            def foo2():
+                app.render('The output.')
+
+        Note::
+            app.route() must come first.
+
+        :param user         : an user name of BASIC authentication.
+        :param password     : a passowrd of BASIC authentication.
+        :param realm        : a realm of BASIC authentication.
+
+        """
+        if user is None or password is None:
+            user = self.config.basicauth_user
+            password = self.config.basicauth_password
+        if realm is None:
+            if hasattr(self.config, 'realm'):
+                realm = self.config.realm
+            else:
+                realm = 'Auth'
+        self.user = user
+        self.password = password
+        self.realm = realm
+
+        def decorate(func, *args, **kws):
+            """
+            A method that actually called as a decorator.
+            It performs BASIC authentication, checking header and return special
+            header for authentication.
+            
+            :param func         : a function to be decorated.
+            """
+            self.func = func
+            def do_authenticate():
+                auth_header = self.request.headers.get('Authorization', '')
+                if auth_header.split():
+                    scheme, code = auth_header.split()
+                else:
+                    scheme = 'Basic'
+                    code = ''
+                if scheme != 'Basic':
+                    raise ValueError('The authentication scheme is not BASIC')
+                if b64decode(code):
+                    user, password = b64decode(code).split(':')
+                else:
+                    user = password = ''
+                if self.user == user and self.password == password:
+                    # the request already had valid authentication header.
+                    return self.func(*args, **kws)
+                resp = self.response
+                resp.set_status(401)
+                self.render('Auth')
+                resp.headers['WWW-Authenticate'] = 'Basic realm="%s"' % self.realm
+
+            return do_authenticate
+
+        return decorate
+
 
 
     @classmethod
@@ -369,8 +439,6 @@ class Microne(object):
             import aha
             cls.config = aha.Config()
         return cls.config
-
-
 
 
 
