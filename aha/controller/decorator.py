@@ -130,7 +130,10 @@ class basicauth(object):
             user = config.basicauth_user
             password = config.basicauth_password
         if realm is None:
-            realm = config.get('realm', 'Authentication')
+            if hasattr(config, 'realm'):
+                realm = config.realm
+            else:
+                realm = 'Auth'
         self.user = user
         self.password = password
         self.realm = realm
