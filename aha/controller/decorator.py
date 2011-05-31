@@ -12,7 +12,7 @@
 decorators.py - A bunch of functions that work as decorators
 for controller methods.
 
-$Id: decorators.py 652 2010-08-23 01:58:52Z ats $
+$Id: decorator.py 6 2011-05-12 10:36:45Z ats $
 """
 
 __author__  = 'Atsushi Shibata <shibata@webcore.co.jp>'
@@ -23,6 +23,7 @@ __all__ = ('authenticate', 'expose', 'cache' )
 
 import logging
 from urlparse import urlsplit
+from base64 import b64decode
 
 from google.appengine.api import memcache
 
@@ -50,6 +51,12 @@ class authenticate(object):
         The check_funk argument is a hook method called after authentication.
         If chack_funk is given, __call__() method calls it
         after authentication.
+
+        :param check_func       : a function called before authentication.
+        :param auth_obj         : an authentication object.
+        :param args             : a arguments to be passed to __call__().
+        :param kws              : a keyword arguments to be passed to __call__().
+
         
         """
         self.args = args
@@ -69,6 +76,8 @@ class authenticate(object):
         A method that actually called as a decorator.
         It returns wrapped function(execute) so that the function
         works every time parent function is called.
+        
+        :param func         : a function to be decorated.
         """
         self.func = func
         def execute(me):
@@ -91,6 +100,71 @@ class authenticate(object):
             if auth_res:
                 return self.func(me, *args, **kws)
             aobj.auth_redirect(me, *self.args, **self.kws)
+
+        return execute
+
+
+class basicauth(object):
+    """
+    A decorator that catch method access, supply BASIC authentication.
+    You may decorate handler methods in controllers like this::
+    
+        @basicauth()
+        def some_funk(self):
+            # your code here...
+    
+    """
+
+    def __init__(self, user = None, password = None, realm = None):
+        """
+        An initialization method of decorator.
+        Authentication information can be passed at initialization time,
+        by using arguments. In case no arguments gives, it uses informations
+        at configration.
+        
+        :param user         : an user name of BASIC authentication.
+        :param password     : a passowrd of BASIC authentication.
+        :param realm        : a realm of BASIC authentication.
+        """
+        if user is None or password is None:
+            user = config.basicauth_user
+            password = config.basicauth_password
+        if realm is None:
+            realm = config.get('realm', 'Authentication')
+        self.user = user
+        self.password = password
+        self.realm = realm
+
+
+    def __call__(self, func, *args, **kws):
+        """
+        A method that actually called as a decorator.
+        It performs BASIC authentication, checking header and return special
+        header for authentication.
+        
+        :param func         : a function to be decorated.
+        """
+        self.func = func
+        def execute(me):
+            auth_header = me.request.headers.get('Authorization', '')
+            if auth_header.split():
+                scheme, code = auth_header.split()
+            else:
+                scheme = 'Basic'
+                code = ''
+            if scheme != 'Basic':
+                raise ValueError('The authentication scheme is not BASIC')
+            if b64decode(code):
+                user, password = b64decode(code).split(':')
+            else:
+                user = password = ''
+            if self.user == user and self.password == password:
+                # the request already had valid authentication header.
+                return self.func(me, *args, **kws)
+            resp = me.response
+            resp.set_status(401)
+            me.render('Auth')
+            resp.headers['WWW-Authenticate'] = 'Basic realm="%s"' % self.realm
 
         return execute
 
