@@ -11,7 +11,7 @@
 """
 The collection of fields definitions for coregeo 
 
-$Id: dispatcher.py 653 2010-08-23 02:00:58Z ats $
+$Id: dispatcher.py 6 2011-05-12 10:36:45Z ats $
 """
 
 __author__  = 'Atsushi Shibata <shibata@webcore.co.jp>'
@@ -109,6 +109,9 @@ def dispatch(hnd):
 
     #check status
     st = ctrl.response._Response__status[0]
+    if st == 401 and ctrl.response.headers.get('WWW-Authenticate'):
+        ctrl.put_cookies()
+        return
     if st >= 400:
         # error occured
         raise Exception('%s %s' % ctrl.response._Response__status)
