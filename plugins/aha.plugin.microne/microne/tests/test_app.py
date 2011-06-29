@@ -8,6 +8,7 @@ from nose.tools import *
 from google.appengine.api import apiproxy_stub_map
 from google.appengine.api.memcache import memcache_stub
 from google.appengine.api import user_service_stub
+from google.appengine.api import memcache
 
 from aha.wsgi.appinit import get_app
 from aha.dispatch.router import rebuild_router
@@ -118,4 +119,83 @@ class TestDispatchers(TestCase):
         # request without USER_EMAIL causes redirection.
         assert_equal(resp.body, 'foo hoge')
 
+    def test_cache(self):
+        # make a new router
+        rebuild_router()
+        app = Microne('cache text')
+
+        foo = 'foo'
+
+        @app.route('/c_url')
+        @app.cache(expire = 10)
+        def url():
+            app.render(foo)
+
+        @app.cache()
+        @app.route('/c_url2')
+        def url2():
+            app.render(foo)
+
+        @app.cache(expire = 0)
+        @app.route('/c_url3')
+        def url3():
+            app.render(foo)
+
+        @app.route('/c_url4')
+        def url4():
+            app.render(foo)
+
+        def nsfunc(req):
+            return req.params.get('baz', '')
+
+        @app.route('/c_url5')
+        @app.cache(namespace_func = nsfunc)
+        def url5():
+            app.render(foo)
+
+
+        # checking if cached function returns 'foo' for the first time.
+        resp = self.app.get('/c_url')
+        assert_equal(resp.body, 'foo')
+        assert_equal(memcache.get('/c_url').get('body', ''), 'foo')
+        assert_equal(memcache.get('/c_url', 'baz'), None)
+
+        resp = self.app.get('/c_url2')
+        assert_equal(resp.body, 'foo')
+
+        resp = self.app.get('/c_url3')
+        assert_equal(resp.body, 'foo')
+
+        resp = self.app.get('/c_url4')
+        assert_equal(resp.body, 'foo')
+
+        resp = self.app.get('/c_url5')
+        assert_equal(resp.body, 'foo')
+
+
+        # changing local variable to make it return different result
+        #    in non-cached functions.
+        foo = 'bar'
+
+        # check if cached function returns the same response it produced 
+        #  the last time.
+        resp = self.app.get('/c_url')
+        assert_equal(resp.body, 'foo')
+        resp = self.app.get('/c_url2')
+        assert_equal(resp.body, 'bar')
+
+        # check if cached but expire = 0 and non-cached function
+        #   returns different result.
+        resp = self.app.get('/c_url3')
+        assert_equal(resp.body, 'bar')
+        resp = self.app.get('/c_url4')
+        assert_equal(resp.body, 'bar')
+
+        resp = self.app.get('/c_url5')
+        assert_equal(resp.body, 'foo')
+        assert_equal(memcache.get('/c_url5', 'bar'), None)
+
+        #resp = self.app.get('/c_url5?baz=bar')
+        #assert_equal(memcache.get('/c_url5', 'bar').get('body', ''), 'bar')
+        #assert_equal(resp.body, 'bar')
 

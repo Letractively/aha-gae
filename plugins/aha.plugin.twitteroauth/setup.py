@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.92b'
+version = '0.93b'
 
 setup(name='aha.plugin.twitteroauth',
       version=version,

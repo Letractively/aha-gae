@@ -8,6 +8,7 @@ aha.plugin.twitteroauth.egg-info/not-zip-safe
 aha.plugin.twitteroauth.egg-info/requires.txt
 aha.plugin.twitteroauth.egg-info/top_level.txt
 twitteroauth/__init__.py
+twitteroauth/microne_config.py
 twitteroauth/oauth.py
 twitteroauth/twitter.py
 twitteroauth/twitter_auth.py

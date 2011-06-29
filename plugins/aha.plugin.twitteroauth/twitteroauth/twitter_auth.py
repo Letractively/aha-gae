@@ -109,6 +109,8 @@ class TwitterOAuth(BaseAuth, TwitterMixin):
         if key:
             memcache.delete(key, namespace = TWITTER_NAMESPACE)
 
+        return {}
+
 
     def set_cookie(self, key, data):
         """

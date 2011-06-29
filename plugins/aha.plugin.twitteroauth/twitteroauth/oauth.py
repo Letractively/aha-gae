@@ -30,9 +30,6 @@ from google.appengine.api import urlfetch
 def abort(n):
     pass
 
-def redirect(url):
-    return url
-
 import aha
 config = aha.Config()
 
@@ -42,6 +39,10 @@ class OAuthMixin(object):
 
     _OAUTH_AUTHORIZE_URL = None
     _OAUTH_NO_CALLBACKS = False
+
+    def redirect(self, url):
+        return url
+
 
     def authorize_redirect(self, callback_uri = None, oauth_authorize_url = None):
         """Redirects the user to obtain OAuth authorization for this service.
@@ -159,7 +160,7 @@ class OAuthMixin(object):
             args['oauth_callback'] = urlparse.urljoin(
                 self.request.url, callback_uri)
 
-        return redirect(authorize_url + '?' + urllib.urlencode(args))
+        return self.redirect(authorize_url + '?' + urllib.urlencode(args))
 
     def _oauth_access_token_url(self, request_token):
         """

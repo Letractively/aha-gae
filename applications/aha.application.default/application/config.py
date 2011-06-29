@@ -21,7 +21,7 @@ def appConfig():
 
     # your route follows.
     from aha.dispatch.router import get_router, get_fallback_router
-    # set the fallback route leading to object structure dispatcher
+     # set the fallback route leading to object structure dispatcher
     fr = get_fallback_router()
     fr.connect(r'*url', controller = 'main', action = 'index')
 

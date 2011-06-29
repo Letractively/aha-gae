@@ -40,7 +40,11 @@ DLMT = '/'
 
 def get_path_obj(path, in_rest = []):
     """
-    A function to obtain Path object from given url
+    A function to obtain Path object from given url.::
+
+    :param path: The path expected to seek Path object.
+    :param in_rest: The items split by delimiter at former seek.
+    Pass it if you want get Path object recursively.
     """
     if path.endswith('/'): path = path[:-1]
     # try to find full url
@@ -64,7 +68,7 @@ def get_path_obj(path, in_rest = []):
 def dispatch(hnd, path, params):
     """
     A function to call appropriate controller and metod, 
-        according to given path object and action
+    according to given path object and action.
     """
     # getting controller from the object type in given path object.
     action = ''
@@ -153,12 +157,54 @@ def dispatch(hnd, path, params):
 class MainController(MakoTemplateController):
     """
     The Controller for universal access.
+    In CoreCMS, this controller respond to all the request.
+    It checks if there is Path object for given path in URL,
+    gets the object for the path, instanciate controller and object
+    and call methods to make response.
+    For example, In case given path is '/foo/bar/edit', foo is container object,
+    bar is page object. It finds a object for path '/foo/bar/edit' but fails, because bar is page object and it has no container. Then it pops given path by
+    using delimiter and split to '/foo/bar' and 'edit'. Then it finds object
+    for '/foo/bar', then finds page object matching for the path.
+    The page object is instanceiated from the datasotre,
+    the controller for the page object is also instanciated. After that, 
+    dispatcher finds if the page controller has 'edit' method. 
+    If it finds the method, it calls the method.
+    If not, it raises the status 404 exception.
     """
+
+    def check_memcache(self):
+        """
+        A method to check if page is cached in memcache
+        seeing the URL in request.
+        It fill output by using memcache and returns true
+        in case a cache to the URL path exists,
+        return false if not.
+        """
+        from aha.controller.decorator import cache
+        namespace = ''
+        if cache.namespace_func:
+            namespace = cache.namespace_func(self.request)
+        p = urlsplit(self.request.url)[2]
+        c = memcache.get(p, namespace = namespace)
+        if c:
+            # in case a given url has cached, we use it to make a response.
+            resp = self.response
+            r = self.response.out
+            r.write(c['body'])
+            for k, i in c['hdr'].items():
+                resp.headers[k] = i
+            self.has_rendered = True
+            self.cached = True
+            return True
+        return False
+
 
     @expose
     def index(self):
         """
         A method to show list of published object.
+        All the request comes here and controller for the objects 
+        take over the request to make response.
         """
         if self.check_memcache():
             return

@@ -31,5 +31,10 @@ curvyCorners(round2d, ".entryinfo");
 
 curvyCorners(round2u, ".partstitle");
 curvyCorners(round2d, ".partsbody");
+curvyCorners(round4, ".referertweet");
+$('.nextprev ul li').animate({delay:1}, 100, function() {
+    $(this).show(800);
+} );
+
 }
 

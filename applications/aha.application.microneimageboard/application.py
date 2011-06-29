@@ -11,8 +11,8 @@ from plugin.twitteroauth.twitter_auth import TwitterOAuth
 # instanciating the app.
 app = Microne(__file__)
 # configuring the twitter authentication.
-initConfig(app, 'v6eCOzDCuVDTwY3Xv29w',
-                'pqs55iaXtSktSPXpFq4Di7KZh2He5HxOjnJM3qNjy8')
+initConfig(app, 'PUTYOUROWNCONSUMERKEY',
+                'PUTYOUROWNCONSUMERSECRET')
 
 class User(Model):
     """
@@ -25,7 +25,7 @@ class User(Model):
     @classmethod
     def get_user(cls, username):
         """
-        A method to obtain user from username.
+        A method to obtain user by using username.
         It returns None in case no user is found.
         :param username: The username you want to get.
         """
@@ -36,7 +36,7 @@ class User(Model):
     def get_current_user(cls, app):
         """
         A method to obtain current login user.
-        It returns None no user is logging in.
+        It returns None when no user is logging in.
         """
         tuser = TwitterOAuth.get_user(app.get_controller())
         if tuser:

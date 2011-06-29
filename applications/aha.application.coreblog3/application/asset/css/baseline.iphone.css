@@ -89,7 +89,7 @@ background-image:url('/img/lsd.png');
 background-repeat: repeat-x;
 }
 
-header h1 {
+header h1.tritech {
 margin: 0 4px;
 width: 240px;
 background: url("/img/logo_mini.png") no-repeat;

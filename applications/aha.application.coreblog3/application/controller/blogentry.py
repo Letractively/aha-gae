@@ -118,7 +118,7 @@ class BlogcommentAddHandler(ContainerAddHandler):
             del controller.form['email']
             del controller.form['url']
             controller.form['url'] = \
-                    HiddenField(name = 'url', default = user.get('url', ''))
+                    HiddenField(name = 'url', default = user.get('icon_url', ''))
 
         state = FC.INITIAL
         controller.blog = controller.content.blog_object()

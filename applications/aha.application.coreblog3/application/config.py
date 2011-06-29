@@ -1,19 +1,32 @@
 # -*- coding: utf-8 -*-
 
-# config.py
-#
-# The application specific configulation comes here.
-#
-
-__author__  = 'Atsushi Shibata <shibata@webcore.co.jp>'
-__docformat__ = 'plaintext'
-__licence__ = 'BSD'
-
 import logging
 import os
 
+def check_for_spartphone(request):
+    """
+    A function to check if user agent is smartphone or not.
+    """
+    ua = request.headers.get('User-Agent', '').lower()
+    go = False
+    for i in ['iphone', 'ipad', 'android']:
+        if i in ua: return True
+    return False
+
+def cache_namespace(request):
+    """
+    A function to return namespace for memcache based in user agent.
+    """
+    if check_for_spartphone(request):
+        return 'smartphone'
+    else:
+        return ''
+
 def appConfig():
     import aha
+    from aha.controller.decorator import cache
+    cache.set_namespace_func(cache_namespace)
+
     config = aha.Config()
     # initialize route and the installed plugins
     from aha.dispatch.router import get_router, get_fallback_router
@@ -21,12 +34,8 @@ def appConfig():
     r = get_router()
 
     # setting up well known config attributes
-
-    # put initial user to access admin interface at the first time.
-    config.initial_user = ['test@example.com']
-    # put your site root here.
-    config.site_root = 'http://your.site'
-
+    config.initial_user = ['test@example.com', 'shib.ats@gmail.com', 'ats']
+    config.site_root = 'http://coreblog.org'
     config.error_template = '/common/error'
     config.logout_url = '/logout'
 
@@ -41,19 +50,34 @@ def appConfig():
     # urls for admin interfaces
     r.connect(r'/_edit_sitedata', controller = 'sitedata', action = 'edit')
 
+    from plugin.twitteroauth.twitter_auth import TwitterOAuth
+    config.auth_obj = TwitterOAuth
+
+    # route fot oauth redirector.
+    r.connect('/_oauth', controller = 'twitteroauth')
+
+    config.consumer_key = '8tvBBBU4P8SqPypC1X4tpA'
+    config.consumer_secret = 'RGdpAxEnuETjKQdpDxsJkR67Ki16st6gfv4URhfdM'
+
     # set the default authenticate function
     from util.authenticate import admin
     config.admin_auth = admin
-    from aha.auth.appengine import AppEngineAuth
-    config.auth_obj = AppEngineAuth
 
     # set the fallback route leading to object structure dispatcher
     fr = get_fallback_router()
     fr.connect(r'*url', controller = 'main', action = 'index')
 
     if config.debug:
-        config.page_cache_expire = 0  # no caceh in development envronment.
-        config.query_cache_expire = 0  # no caceh in development envronment.
+        from aha.auth.appengine import AppEngineAuth
+        config.auth_obj = AppEngineAuth
+        """
+        from plugin.user.datastoreauth import DataStoreAuth
+        config.auth_obj = DataStoreAuth
+        config.login_url = '/login'
+        """
+
+        #config.page_cache_expire = 0  # no caceh in development envronment.
+        #config.query_cache_expire = 0  # no caceh in development envronment.
 
         config.site_root = 'http://127.0.0.1:8080'
         # setting log level

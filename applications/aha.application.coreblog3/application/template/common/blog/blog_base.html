@@ -11,14 +11,31 @@
 		%endif
 		${blog.title}
 		</title>
+		<meta property="og:type" content="article"/>
 		<link rel="alternate"
 		      href="http://coreblog.org/ats/RSS2"
 		      title="RSS 2.0" type="application/rss+xml" />
+		<script type="text/javascript" src="http://s.hatena.ne.jp/js/HatenaStar.js"></script>
+		<script type="text/javascript">
+		Hatena.Star.SiteConfig = {
+			entryNodes: {
+			'article header': {
+			uri: 'h2 a',
+			title: 'h2',
+			container: 'h2'
+			}
+		  }
+		};
+		</script>
+		<script type="text/javascript" src="http://apis.google.com/js/plusone.js">
+		  {lang: 'ja'}
+		</script>
 </%def>
 
 <%def name="header()">
 <header class="width4">
-	<h1><a href="${blog.get_path()}">${blog.title}</a></h1>
+	<script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+	<h1 class="tritech"><a href="${blog.get_path()}">${blog.title}</a></h1>
 </header>
 </%def>
 
@@ -29,14 +46,22 @@ column one
 	<aside>
 		<dl>
 			${about(blog)}
+			${twitterwidget(blog)}
+			${amazon(blog)}
 			${recent_entries(blog)}
+			${hatenabookmark(blog)}
 			${recent_comments(blog)}
+			${googleconnection(blog)}
 		</dl>
 	</aside>
 </%def>
 
+<%def name="ad_part1(blog)">
+</%def>
+
 <%def name="main()">
 	<section class="width4">
+		${self.ad_part1(blog)}
 		<div class="column width3 first">
 			${self.column_one()}
 		</div>

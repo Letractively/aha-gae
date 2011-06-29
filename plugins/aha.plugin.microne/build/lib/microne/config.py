@@ -1,4 +1,15 @@
 # -*- coding: utf-8 -*-
+#
+# config.py : A module for configuration function.
+# Special configuration for aha.plugin.microne
+#
+# Copyright 2011 Atsushi Shibata
+# $Id: dispatcher.py 653 2010-08-23 02:00:58Z ats $
+
+
+__author__  = 'Atsushi Shibata <shibata@webcore.co.jp>'
+__docformat__ = 'plaintext'
+__licence__ = 'BSD'
 
 import logging
 import os
@@ -33,6 +44,7 @@ def initConfig(basedir):
     from aha.controller import makocontroller
     makocontroller.get_lookup()
     config.template_lookup = makocontroller.tlookup
+    config.error_template = ''
 
     config.page_cache_expire = 60*60*4 # 8 hours
     config.query_cache_expire = 60*60*2 # 2 hours
@@ -52,6 +64,17 @@ def initConfig(basedir):
 
     # now load all the names from application.
     from application import *
+
+    if not hasattr(config, 'auth_obj'):
+        # set auth_obj  for authentication.
+        from aha.auth.appengine import AppEngineAuth
+        config.auth_obj = AppEngineAuth
+
+    if not hasattr(config, 'controller_class'):
+        # set controller_class if it doesn't exist.
+        from aha.controller.makocontroller import MakoTemplateController
+        config.controller_class = MakoTemplateController
+
 
     return config
 

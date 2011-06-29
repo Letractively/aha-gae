@@ -1,0 +1,79 @@
+# -*- coding: utf-8 -*-
+
+##############################################################################
+#
+# facebookoauth.py
+# A module to provide auth handler of Facebook OAuth.
+#                            stores user data in memcache.
+#
+# Copyright (c) 2010 Webcore Corp. All Rights Reserved.
+#
+##############################################################################
+""" appengine.py - A module to provide auth handler of Facebook OAuth
+
+$Id$
+"""
+
+import logging
+
+from google.appengine.api import memcache
+
+from aha.auth.base import BaseAuth
+from plugin.facebookoauth.facebook import FacebookMixin
+
+FACEBOOK_NAMESPACE = 'facebook_login_users'
+OAUTH_ACCESS_TOKEN_COOKIE = '_facebook_oauth_request_token'
+
+EXPIRE = 60*60*24*7
+
+class FacebookOAuth(BaseAuth, FacebookMixin):
+    TYPE = 'facebook'
+
+    def auth(self, ins, *param, **kws):
+        """
+        A method to perform authentication, or
+            to check if the authentication has been performed.
+        It returns true on success, false on failure.
+        """
+        u = self.get_user(ins, *param, **kws)
+        if not u:
+            return False
+        return True
+
+
+    def auth_redirect(self, ins, *param, **kws):
+        """
+        A method to perform redirection
+            when the authentication fails, user doesn't have privileges, etc.
+        """
+        self.controller = ins
+        url = self.authenticate_redirect()
+        if url:
+            ins.redirect(url)
+
+
+    def get_user(self, ins, *param, **kws):
+        """
+        A method to return current login user.
+        It returns user dict if the user is logging in,
+            None if doesn't.
+        """
+        key = ins.cookies.get(OAUTH_ACCESS_TOKEN_COOKIE, '')
+        if key:
+            user = memcache.get(key, namespace = FACEBOOK_NAMESPACE)
+            if user: return user;
+
+        return {}
+
+
+    def set_cookie(self, key, data):
+        """
+        A method to set cookie
+        """
+        logging.debug('set cookie')
+        self.controller.post_cookie[key] = data
+        self.controller.post_cookie[key]['path'] = '/'
+
+
+def main(): pass;
+

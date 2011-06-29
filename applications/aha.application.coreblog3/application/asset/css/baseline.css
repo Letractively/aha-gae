@@ -251,12 +251,28 @@ margin: 8px 0;
 
 header h1 {
 margin: 8px 0;
-font-family: arial;
+width: 385px;
+background: url("/img/site_logo.png") no-repeat;
+}
+
+header h1.tritech {
+margin: 8px 0 0 0;
+width: 385px;
+background: url("/img/logo.png") no-repeat;
 }
 
 header h1 a {
+display: block;
 text-decoration: none;
-color: #444;
+overflow: hidden;
+border: 0;
+margin: 0;
+padding: 0;
+padding-top: 59px;
+height: 0px !important;
+height /**/: 59px;
+width: 385px;
+cursor: pointer;
 }
 
 /* navigations */
@@ -280,7 +296,7 @@ background: url("../img/link_icon.png") no-repeat 0px 1px;
 
 nav li a {
 text-decoration: none;
-color: #ccc;
+color: #a64;
 }
 
 nav li a:hover {
@@ -306,7 +322,7 @@ padding: 0;
 
 
 div.entrytitle {
-background: #666;
+background: #645;
 }
 
 .entrytitle h2 {
@@ -331,8 +347,8 @@ color: #ddd;
 
 
 header div.entryinfo {
-background-color: #ddd;
-border-top: 2px solid #666;
+background-color: #ede;
+border-top: 2px solid #645;
 }
 
 header div.entryinfo ul {
@@ -358,25 +374,21 @@ padding: 4px 8px;
 }
 
 nav.nextprev {
-margin: 8px 0 8px 0;
+margin: 0;
 padding: 0;
+/*background-color: #ddd;*/
 }
 
-nav.nextprev dl {
-margin: 4px 0;
-padding: 0;
+nav.nextprev ul {
+margin: 0;
+padding: 0 0 4px 0;
 font-size: 10pt;
 text-align: left;
 }
 
-nav.nextprev dt {
-display: inline;
-padding: 0;
-}
-
-nav.nextprev dd {
-display: inline;
-padding: 0 0.5em;
+nav.nextprev li {
+display: none;
+padding: 2px 0.5em;
 }
 
 /* blogparts */
@@ -392,7 +404,7 @@ margin: 0;
 padding: 2px 4px;
 font-size: 9pt;
 font-weight: bold;
-background: #666;
+background: #645;
 color: #fff;
 }
 
@@ -400,7 +412,7 @@ aside dd {
 margin: 0 0 8px 0;
 padding: 4px 4px 12px 4px;
 font-size: 9pt;
-background: #eee;
+background: #ede;
 color: #111;
 }
 
@@ -430,11 +442,11 @@ border-bottom: 1px dotted black;
 
 aside dd a {
 text-decoration: none;
-color: #333;
+color: #425;
 }
 
 aside dd a:hover {
-color: #888;
+color: #a9b;
 }
 
 aside dd.partsbody time {
@@ -483,15 +495,15 @@ font-weight: bold;
 }
 
 article a {
-color: #444;
+color: #86a;
 }
 
 article a:hover {
-color: #666;
+color: #b9c;
 }
 
 article a:visited {
-color: #444;
+color: #546;
 }
 
 article ul,
@@ -508,8 +520,8 @@ padding-left: 50px;
 line-height: 20px;
 font-family:Monaco,"Courier New",Tahoma;
 background: url('/img/back_code.gif') left top repeat-y;
-border-bottom: 1px solid #ccc;
-border-right: 1px solid #ccc;
+border-bottom: 1px solid #CCEEDD;
+border-right: 1px solid #CCEEDD;
 white-space: pre-wrap;
 word-wrap: break-word; /* IE6, IE7 hack */
 }
@@ -518,6 +530,15 @@ word-wrap: break-word; /* IE6, IE7 hack */
 font-family:Monaco,"Courier New",Tahoma;
 font-size: 1em
 }
+
+.float-right {
+float: right;
+}
+
+.float-left {
+float: left;
+}
+
 
 /* comment form */
 
@@ -561,7 +582,7 @@ display: block;
 }
 
 section.commentform div.form-container div.controlset.required label {
-color: #888;
+color: #842;
 }
 
 div.comment {
@@ -570,13 +591,13 @@ margin: 0 0 1em 0;
 section.comments h2 {
 font-size: 12pt;
 font-weight: bold;
-color: #444;
+color: #425;
 }
 
 div.comment h3 {
 font-size: 10pt;
 font-weight: bold;
-color: #444;
+color: #425;
 padding: 0;
 margin: 0;
 text-align: left;
@@ -616,11 +637,6 @@ font-size: 9pt;
 display:block;
 }
 
-footer a {
-color: #222;
-}
-
-
 ul.flat
 {
 display: inline;
@@ -631,4 +647,73 @@ margin: 0;
 ul.flat li {
 margin-right: 1em;
 display: inline;
+}
+
+/* tweet area */
+
+/* 表示領域の大枠 */
+#topsy-tweet-search-results {
+    font-size:12px;
+    border:1px solid #a9b;
+/*    border-bottom:2px solid #ddf6ff;*/
+    background:white;
+    margin-top:8px;
+    padding-left:6px;
+}
+/* 表示領域の見出し */
+#topsy-tweet-search-results .topsy-tweet-search-results-header {
+    color:#11c4ff;
+    font-weight:bold;
+}
+/* 個々のツイート領域 */
+#topsy-tweet-search-results .topsy-tweet-search-result {
+    clear:both;
+    padding:6px 0;
+    /*border-bottom:2px solid #fff;*/
+    overflow:hidden;
+}
+/* ユーザー名 */
+#topsy-tweet-search-results .topsy-tweet-name {
+    font-weight:bold;
+}
+/* アイコン領域 */
+#topsy-tweet-search-results .topsy-tweet-image {
+    float:left;
+    width:36px;
+    height:36px;
+    margin-right:12px;
+}
+/* アイコン画像 */
+#topsy-tweet-search-results .topsy-tweet-image img {
+    width:36px;
+    height:36px;
+}
+/* ツイート */
+#topsy-tweet-search-results .topsy-tweet-text {
+    float:left;
+    /* width:430px; */
+    background:#fff;
+    padding:4px;
+}
+/* 日付 */
+#topsy-tweet-search-results .topsy-tweet-date a {
+    color:#999;
+}
+/* 「すべて表示」の操作テキスト */
+#topsy-tweet-search-results #topsy-show-more-tweets {
+    color:#1d3994;
+    cursor:pointer;
+    text-align:right;
+    font-weight:bold;
+    padding-right:4px;
+}
+/* アイコン形式の表示でのアイコンサイズ */
+#topsy-tweet-search-results img.topsy-profile-image-small {
+    width:24px;
+    height:24px;
+    margin:4px;
+}
+
+.ad {
+text-align: center;
 }

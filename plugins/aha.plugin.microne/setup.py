@@ -1,13 +1,14 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.61b'
+version = '0.62b'
 
 setup(name='aha.plugin.microne',
       version=version,
-      description="A microframework plugin for aha",
+      description=("Yet another microframework"
+                   " on the top of the full stack framework aha"),
       long_description="""\
-A plugin that makes aha framework working as microframework.""",
+A plugin that makes aha framework work as microframework.""",
       classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       keywords='web aha plugin microframework',
       author='Atsushi Shibata',

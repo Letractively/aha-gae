@@ -1,3 +1,4 @@
+README.txt
 setup.cfg
 setup.py
 aha.application.coreblog3.egg-info/PKG-INFO

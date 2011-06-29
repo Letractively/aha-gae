@@ -74,6 +74,11 @@ class TwitteroauthController(MakoTemplateController):
                'realname':user.get('name', ''),
                'icon_url':user.get('profile_image_url', ''),
                }
+            token = user.get('access_token', '')
+            if token:
+                if token.get('secret', '') and token.get('key', ''):
+                    d['access_secret'] = token.get('secret', '')
+                    d['access_key'] = token.get('key', '')
             memcache.set(self.cookies.get(OAUTH_ACCESS_TOKEN_COOKIE),
                          d, namespace = TWITTER_NAMESPACE, time = EXPIRE)
             rurl = self.session.get('referer', '')

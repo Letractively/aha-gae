@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.7b'
+version = '0.71b'
 
 setup(name='aha.recipe.gae',
       version=version,

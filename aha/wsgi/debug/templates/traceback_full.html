@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/html4/loose.dtd">
 <html>
   <head>
-    <title>${traceback.exception} // Werkzeug Debugger</title>
+    <title>${traceback.exception[:128] | h} // Werkzeug Debugger</title>
     <link rel="stylesheet" href="./__debugger__?cmd=resource&amp;f=style.css" type="text/css">
     <script type="text/javascript" src="./__debugger__?cmd=resource&amp;f=jquery.js"></script>
     <script type="text/javascript" src="./__debugger__?cmd=resource&amp;f=debugger.js"></script>
