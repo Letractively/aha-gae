@@ -233,6 +233,9 @@ class BlogentryController(ContainerBase):
         """
         A handler for blog entry.
         """
+
+        self.set_common_headers()
+
         self.smartphone = check_for_spartphone(self.request)
         self.blog = self.content.blog_object()
         self.get_comment_form = self.make_comment_form
