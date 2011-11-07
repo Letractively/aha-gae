@@ -11,9 +11,9 @@ from aha.modelcontroller.crudcontroller import ModelCRUDController
 from aha.controller.decorator import authenticate, expose, cache
 
 from model import File, Path
-from controller.page import ContentBase
 from mimetypes import guess_type
 
+from blogbase import BlogContentBase
 from page import ContentEditHandler, ContentAddHandler
 from aha import Config
 config = Config()
@@ -50,7 +50,7 @@ class FileEditHandler(ContentEditHandler):
         controller.redirect(obj.get_parent().get_path()+'/list')
 
 
-class FileController(ContentBase):
+class FileController(BlogContentBase):
     """
     The controller for file
     """
@@ -60,6 +60,8 @@ class FileController(ContentBase):
     @expose
     @cache()
     def index(self):
+        self.set_common_headers()
+
         obj = self.content
         hdrs = {'Content-Type':str(obj.content_type)}
         self.view.render(obj.body, hdrs)
