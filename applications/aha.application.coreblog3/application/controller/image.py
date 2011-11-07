@@ -18,7 +18,7 @@ from aha.controller.decorator import authenticate, expose, cache
 from aha.controller.util import get_current_user
 
 from model import Image, Path
-from page import ContentBase
+from blogbase import BlogContentBase
 from mimetypes import guess_type
 
 from page import ContentEditHandler, ContentAddHandler
@@ -88,7 +88,7 @@ class ImageEditHandler(ContentEditHandler):
         controller.redirect(obj.get_parent().get_path()+'/list')
 
 
-class ImageController(ContentBase):
+class ImageController(BlogContentBase):
     """
     The controller for image
     """
@@ -97,6 +97,8 @@ class ImageController(ContentBase):
     @expose
     @cache()
     def index(self):
+        self.set_common_headers()
+
         obj = self.content
         hdrs = {'Content-Type':str(obj.content_type)}
         self.view.render(obj.body, hdrs)
