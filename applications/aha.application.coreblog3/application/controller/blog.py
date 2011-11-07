@@ -15,6 +15,8 @@ __author__  = 'Atsushi Shibata <shibata@webcore.co.jp>'
 __docformat__ = 'plaintext'
 __licence__ = 'MIT'
 
+from datetime import datetime, timedelta
+
 from aha.controller.decorator import authenticate, expose, cache
 from aha.modelcontroller.formcontrol import FormControl
 from aha import Config
@@ -22,6 +24,7 @@ config = Config()
 
 from folder import ContainerBase
 from model import Path, Blog, BlogEntry, BlogCategory
+from application.controller import BlogContainerBase
 
 class BlogController(ContainerBase):
     """
@@ -41,6 +44,8 @@ class BlogController(ContainerBase):
         A handler for blog index.
         """
         self.blog = self.content
+        self.set_common_headers()
+
         self.render(template = self.INDEX_TEMPLATE)
 
 
