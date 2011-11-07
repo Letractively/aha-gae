@@ -109,6 +109,9 @@ class ContainerBase(ModelCRUDController):
             # so we let it be shown as the index page of the container.
             # TDB
             pass
+
+        self.set_common_headers()
+
         t = self.INDEX_TEMPLATE
         if obj.template:
             t = obj.template
