@@ -22,11 +22,10 @@ from aha.modelcontroller.formcontrol import FormControl
 from aha import Config
 config = Config()
 
-from folder import ContainerBase
 from model import Path, Blog, BlogEntry, BlogCategory
-from application.controller import BlogContainerBase
+from blogbase import BlogContainerBase
 
-class BlogController(ContainerBase):
+class BlogController(BlogContainerBase):
     """
     The controller for Blog base.
     """
@@ -64,14 +63,14 @@ class BlogController(ContainerBase):
         else:
             addable.remove(BlogCategory.TYPE)
         self.side_menu_items = (
-            ('/style/img/list_icon.gif', 'Show Entry list',
+            ('/style/img/list_icon.png', 'Show Entry list',
                                          c.get_path()+'/list' ),
-            ('/style/img/list_icon.gif', 'Show Category list',
+            ('/style/img/list_icon.png', 'Show Category list',
                                          c.get_path()+'/categories' ),
-            ('/style/img/edit_icon.gif', 'Edit Blog Settings',
+            ('/style/img/edit_icon.png', 'Edit Blog Settings',
                                          c.get_path()+'/edit' ),
-            ('/style/img/add_icon.gif', 'Add', '#',
-                [('/style/img/%s_icon.gif' % x.lower(),
+            ('/style/img/add_icon.png', 'Add', '#',
+                [('/img/%s_icon.gif' % x.lower(),
                   x, (c.get_path()+'/add?type=%s')%x)
                         for x in addable],
             )

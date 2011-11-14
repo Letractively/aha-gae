@@ -21,7 +21,7 @@ from model import Image, Path
 from blogbase import BlogContentBase
 from mimetypes import guess_type
 
-from page import ContentEditHandler, ContentAddHandler
+from blogbase import ContentEditHandler, ContentAddHandler
 
 def detect_imagetype(image):
     if image[6:10] == 'JFIF': return 'image/jpeg'

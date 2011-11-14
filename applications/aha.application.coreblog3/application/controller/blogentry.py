@@ -22,7 +22,8 @@ from aha.modelcontroller.formcontrol import FormControl
 FC = FormControl
 from aha import Config
 config = Config()
-from folder import ContainerBase, ContainerEditHandler, ContainerAddHandler
+from blogbase import (ContainerEditHandler, ContainerAddHandler,
+                      BlogContainerBase)
 from model import Blog, BlogEntry, BlogCategory, BlogComment, BlogTrackback
 
 from config import check_for_spartphone
@@ -137,7 +138,7 @@ class BlogcommentAddHandler(ContainerAddHandler):
 
         return FC.INITIAL
 
-class BlogentryController(ContainerBase):
+class BlogentryController(BlogContainerBase):
     """
     The controller for Blog Entry.
     """

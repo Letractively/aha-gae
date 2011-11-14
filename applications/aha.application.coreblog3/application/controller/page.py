@@ -18,7 +18,6 @@ __licence__ = 'MIT'
 import logging
 from google.appengine.api import users
 
-from aha.modelcontroller.formcontrol import FormControl
 from aha import Config
 
 from aha.modelcontroller.crudcontroller import (ModelCRUDController,
@@ -28,71 +27,6 @@ from aha.controller.decorator import authenticate, expose, cache
 from blogbase import BlogContentBase
 from model import Page, Path
 config = Config()
-
-class ContentEditHandler(EditHandler):
-    FC = FormControl()
-    FORM_TEMPLATE = '/common/admin/object_form'
-
-    def get_value(self, controller):
-        """
-        A method to obtain value from db, to supply to form fields.
-        """
-        obj = controller.content
-        d = {}
-        for f in controller.form:
-            n = f.get_name()
-            if hasattr(obj, n):
-                d[n] = getattr(obj, n)
-        return d
-
-    def make_form(self, controller):
-        """
-        A method to create edit form.
-        You should override this method in your subclass
-            in case you want to change the way of form creation.
-        """
-        return controller.get_form('edit')
-
-    @FC.handle_state(FormControl.PROCESSING, FormControl.FAILURE)
-    def show_form(self, controller):
-        controller.set_side_menu_items()
-        obj = controller.content
-        controller.form.set_action(obj.get_path()+'/edit')
-        controller.objects = controller.form.get_object_tag()
-        controller.render(template = self.FORM_TEMPLATE)
-
-    @FC.handle_state(FormControl.SUCCESS)
-    def process_data(self, controller):
-        from datetime import datetime
-        from google.appengine.api import memcache
-        memcache.flush_all()
-
-        obj = controller.content
-        v = controller.form.validate_result
-        for k in v:
-            setattr(obj, k, v[k])
-        obj.modified_at = datetime.now()
-        obj.put()
-        obj.sync_path(obj.get_path())
-
-        controller.set_state(FormControl.INITIAL)
-        rpath = config.site_root+obj.get_parent().get_path()+'/list'
-        controller.redirect(rpath)
-
-class ContentAddHandler(AddHandler):
-    FC = FormControl()
-    FORM_TEMPLATE = '/common/admin/object_form'
-
-    def make_form(self, controller = None):
-        form = self.get_form('add', self)
-        return form
-
-    @FC.handle_state(FormControl.PROCESSING, FormControl.FAILURE)
-    def show_form(self, controller):
-        controller.set_side_menu_items()
-        obj = controller.content
-        controller.objects = controller.form.get_object_tag()
-        controller.render(template = self.FORM_TEMPLATE)
 
 
 class PageController(BlogContentBase):

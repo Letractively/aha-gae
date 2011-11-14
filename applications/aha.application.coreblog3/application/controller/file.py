@@ -14,7 +14,7 @@ from model import File, Path
 from mimetypes import guess_type
 
 from blogbase import BlogContentBase
-from page import ContentEditHandler, ContentAddHandler
+from blogbase import ContentEditHandler, ContentAddHandler
 from aha import Config
 config = Config()
 
