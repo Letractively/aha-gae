@@ -598,6 +598,7 @@ class RichText(TextField):
     theme_advanced_blockformats : "p,h1,h2,h3,h4,blockquote,div",
     relative_urls : false,
     remove_script_host : false,
+    extended_valid_elements : "iframe[*]",
 
     });
 
